@@ -102,7 +102,7 @@ async function signInWithSpotify() {
         <div class="flex justify-between items-center gap-6">
             <img src="https://i.imgur.com/fPuEa9V.png" alt="" class="h-32">
             <div class="">
-                <button type="submit" class="bg-[#18D860] hover:bg-blue-600 text-black font-bold py-2 px-4 rounded" @click="signInWithSpotify">LOGIN TO SPOTIFY</button>
+                <button type="submit" class="bg-[#18D860] text-black font-bold py-2 px-4 rounded" @click="signInWithSpotify">LOGIN TO SPOTIFY</button>
             </div>
         </div>
 

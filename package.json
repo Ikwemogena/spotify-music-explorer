@@ -11,9 +11,11 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.7.2",
-    "@nuxtjs/supabase": "^0.3.7",
     "@types/node": "^18.16.19",
     "nuxt": "^3.6.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.11",
+    "pinia": "^2.1.4"
+  }
 }

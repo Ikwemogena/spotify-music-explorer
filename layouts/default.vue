@@ -3,13 +3,15 @@
         <!-- <h1>spotify 2.0</h1> -->
         <!-- <slot /> -->
 
-        <!-- <div class="bg-black h-screen overflow-hidden">
-            <main>
+        <div class="bg-black h-screen overflow-hidden">
+            <main class="flex">
                 <Sidebar />
+                <!-- <MusicCenter /> -->
+                <slot />
             </main>
             
-        </div> -->
-        <slot />
+        </div>
+        <!-- <slot /> -->
 
 
     </div>
