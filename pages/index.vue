@@ -5,12 +5,12 @@
 
         <div class="bg-black h-screen overflow-hidden">
             <main class="flex">
-                <Sidebar />
+                <!-- <Sidebar /> -->
                 <MusicCenter />
             </main>
             
         </div>
-        <slot />
+        <!-- <slot /> -->
 
 
     </div>
