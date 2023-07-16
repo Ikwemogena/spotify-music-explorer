@@ -4,7 +4,7 @@
         <!-- <slot /> -->
 
         <div class="bg-black h-screen overflow-hidden">
-            <main class="flex">
+            <main class="flex w-full">
                 <!-- <Sidebar /> -->
                 <MusicCenter />
             </main>
