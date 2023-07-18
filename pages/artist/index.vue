@@ -1,11 +1,7 @@
 <template>
-  <div class=" text-white">
+    <div>
 
-      <div>
-        <MuseHome/>
-      </div>
-
-  </div>
+    </div>
 </template>
 
 <script setup>

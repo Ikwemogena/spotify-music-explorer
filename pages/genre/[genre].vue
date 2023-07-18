@@ -1,9 +1,20 @@
 <template>
     <div class="text-white">
 
-      <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
+      <!-- <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
             <MusicList :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
-        </div>
+        </div> -->
+
+        <a
+  v-for="(genre, index) in genres"
+  :key="index"
+  :href="getGenreLink(genre.id)"
+  class="genre-card"
+  :style="{ backgroundColor: getRandomColor() }"
+>
+  <p class="genre-title">{{ genre.name }}</p>
+</a>
+
 
         
 
@@ -40,7 +51,7 @@ import { useStore } from '@/store/currentSong';
 // colorClass.value = randomColorClass;
 
 
-const {playlist} = useRoute().params;
+const {genre} = useRoute().params;
 const accessToken = ref('');
 const playlistTitle = ref('');
 const playlistSongs = ref([]);
@@ -59,6 +70,11 @@ onMounted(async () => {
     
   //   }
 });
+
+
+function getGenreLink(genreId) {
+  return `https://open.spotify.com/genre/${genreId}`;
+}
 
 async function getPlaylist(token, playlistId) {
   try {

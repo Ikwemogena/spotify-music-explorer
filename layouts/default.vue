@@ -1,7 +1,5 @@
-<template>
+<!-- <template>
     <div>
-        <!-- <h1>spotify 2.0</h1> -->
-        <!-- <slot /> -->
 
         <div class="bg-black h-screen overflow-hidden">
             <main class="flex">
@@ -13,22 +11,19 @@
                     </div>
                 </header>
                 <Sidebar />
-                <!-- <MusicCenter /> -->
+                <MusicCenter />
                 <slot />
                 
             </main>
 
-            <div class="sticky-bottom-0">
+            <div class="sticky bottom-0">
                 <MusicPlayer />
 
+                <TestPlayer />
             </div>
-            <!-- <MusicPlayer /> -->
+            <MusicPlayer />
             
         </div>
-        
-        <!-- <slot /> -->
-
-        <MusicPlayer />
 
 
     </div>
@@ -39,5 +34,62 @@
 </script>
 
 <style lang="scss" scoped>
+
+</style> -->
+
+<template>
+    <div>
+
+        <main class="flex">
+            <MuseSideBar />
+
+            <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
+
+                <header class="bg-black text-white p-4">
+                    <div class="flex justify-between">
+                        <div class="flex gap-2">
+                            <button>Back</button>
+                            <button>Forward</button>
+                        </div>
+
+
+                        <div>
+                            profile
+                        </div>
+                    </div>
+                </header>
+
+                <div class="bg-[#1F1F22]">
+
+                    <!-- <MuseCreatePlaylistModal /> -->
+                    <slot />
+
+                </div>
+                
+            </div>
+
+        </main>
+
+        <div class="sticky bottom-0">
+                <MusicPlayer />
+
+                <!-- <TestPlayer /> -->
+            </div>
+       
+
+    </div>
+</template>
+
+<script setup>
+
+</script>
+
+<style scoped>
+
+body {
+    background-color: rgba(33, 33, 36, 1);
+}
+
+
 
 </style>
