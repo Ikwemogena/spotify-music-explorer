@@ -2,7 +2,7 @@
     <div class="text-white">
 
       <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
-            <MusicList :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
+            <MusicList :playlistImage="playlistImage" :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
         </div>
 
         
@@ -44,6 +44,8 @@ const {playlist} = useRoute().params;
 const accessToken = ref('');
 const playlistTitle = ref('');
 const playlistSongs = ref([]);
+const playlistImage = ref('');
+
 
 // https://api.spotify.com/v1/playlists/{playlist_id}/tracks
 
@@ -75,7 +77,8 @@ async function getPlaylist(token, playlistId) {
     const data = await response.json();
     console.log('Playlist:', data);
     playlistTitle.value = data.name;
-    console.log('Playlist Title:', playlistTitle.value);
+    playlistImage.value = data.images[0].url;
+    // console.log('Playlist Title:', playlistTitle.value);
   } catch (error) {
     console.error(error);
   }

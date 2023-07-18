@@ -1,6 +1,5 @@
 <template>
     <div class="text-white">
-
         <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
             <!-- <div v-for="(song, index) in likedSongs" :key="song.id" @click="playSong(song)">
                 <p>{{ song }}</p>
@@ -10,8 +9,9 @@
 
             <!-- <section class="flex items-end space-x-7 bg-gradient-to-b to-black from-red-500 h-80 text-white p-8"> -->
             <section :class="`flex items-end space-x-7 bg-gradient-to-b ${colorClass} h-70 text-white p-8 w-full`" v-if="playlistTitle">
-                <img src="https://mosaic.scdn.co/640/ab67616d0000b2730a7a29be24e9d5cf030ccd6bab67616d0000b27310426b9f47266bad330be9edab67616d0000b2734467b1b14466adeec3d7ee9fab67616d0000b273d77e0b25066081fd50e66a14" alt="" class="h-44 w-44 shadow-2xl">
+                <!-- <img src="https://mosaic.scdn.co/640/ab67616d0000b2730a7a29be24e9d5cf030ccd6bab67616d0000b27310426b9f47266bad330be9edab67616d0000b2734467b1b14466adeec3d7ee9fab67616d0000b273d77e0b25066081fd50e66a14" alt="" class="h-44 w-44 shadow-2xl"> -->
 
+                <img :src="playlistImage" alt="" class="h-44 w-44 shadow-2xl" />
                 <div>
                     <p>PLAYLIST</p>
                     <h1 class="text-xl md:text-4xl lg:text-7xl  font-bold">{{playlistTitle}}</h1>
@@ -30,7 +30,7 @@
                   <img class="h-10 w-10" :src="song.track.album.images[2].url" alt="">
 
                   <div>
-                    <p class="w-36 lg:w-64 truncate text-white">{{ song.track.name }}</p>
+                    <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-4 pr-4"><p class="w-36 lg:w-64 truncate text-white hover:underline">{{ song.track.name }}</p></NuxtLink>
                     
                     <!-- <p>{{ song.added_at }}</p> -->
                     
@@ -38,8 +38,9 @@
                   </div>
 
                   <div class="flex items-center justify-between ml-auto md:ml-0">
-                    <p class="w-40 hidden md:inline">{{ song.track.album.name }}</p>
-                    <p>{{ song.track.duration_ms }}</p>
+                    <NuxtLink :to="`/album/${song.track.album.id}`" class="flex justify-between gap-4 pr-4"><p class="w-40 hidden md:inline hover:underline truncate pr-6">{{ song.track.album.name }}</p></NuxtLink>
+                    <!-- <p>{{ song.track.duration_ms }}</p> -->
+                    <p>{{ formatDuration(song.track.duration_ms)}}</p>
                   </div>
 
                 </div>
@@ -56,7 +57,7 @@
 <script setup>
 import { useStore } from '@/store/currentSong';
 
-
+// const playlistImage = ref('');
 const colorClass = ref('');
 const colors = [
   "from-indigo-500",
@@ -99,6 +100,7 @@ const accessToken = ref('');
 const { playlistTitle, playlistSongs } = defineProps({
   playlistTitle: String,
   playlistSongs: Array,
+  playlistImage: String,
 });
 
 console.log('liked songs here:', playlistSongs);
@@ -195,6 +197,13 @@ try {
   console.error(error);
 }
 };
+
+
+function formatDuration(durationMs) {
+  const minutes = Math.floor(durationMs / 60000);
+  const seconds = ((durationMs % 60000) / 1000).toFixed(0);
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
 
 
 </script>

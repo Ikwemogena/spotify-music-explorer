@@ -1,7 +1,7 @@
 <template>
     <div>
         <section :class="`flex items-end space-x-7 bg-gradient-to-b ${colorClass} h-70 text-white p-8 w-full`">
-                <img src="https://mosaic.scdn.co/640/ab67616d0000b2730a7a29be24e9d5cf030ccd6bab67616d0000b27310426b9f47266bad330be9edab67616d0000b2734467b1b14466adeec3d7ee9fab67616d0000b273d77e0b25066081fd50e66a14" alt="" class="h-44 w-44 shadow-2xl">
+                <img :src="playlistImage" alt="" class="h-44 w-44 shadow-2xl">
 
                 <div>
                     <p>PLAYLIST</p>
@@ -24,6 +24,8 @@ const accessToken = ref('');
 // const playlistTitle = ref('');
 
 const playlistSongs = ref([])
+const playlistImage = 'https://images.unsplash.com/photo-1689317145812-f25d593e2ba9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60'
+
 
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
@@ -80,6 +82,7 @@ async function getLikedSongs(token) {
 
     console.log('liked songs: ', data.items);
     playlistSongs.value = data.items;
+    // playlistImage.value = data.images[0].url;
 
     // console.log(likedSongs.value)
   } catch (error) {

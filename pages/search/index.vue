@@ -1,10 +1,12 @@
 <template>
 
 
-<div class="flex-grow h-screen overflow-y-scroll no-scrollbar p-4">
+<div class="flex-grow h-screen overflow-y-scroll no-scrollbar p-8">
     <div class="flex flex-col justify-center">
-      <input type="text" v-model="query" placeholder="Search for songs, podcasts, or albums" @change="search"/>
-      <button @click="search">Search</button>
+      <div class="flex justify-between">
+        <input class="rounded p-2" type="text" v-model="query" placeholder="Search for songs, podcasts, or albums" @change="search"/>
+      <button @click="search" class="border p-2 rounded px-3 text-white">Search</button>
+      </div>
         <div id="recentSearches">
             <h3>Recent Searches</h3>
             <ul>
@@ -12,18 +14,46 @@
             </ul>
         </div>
 
-  
-      <div id="searchResults">
-        <!-- Search results will be dynamically updated here -->
-        <div v-for="result in results" :key="result.id">
-            <NuxtLink :to="`/playlist/${result.id}`"><p>{{ result.name }}</p></NuxtLink>
+      <div id="searchResults" class="grid grid-cols-4 gap-4">
+        Search results will be dynamically updated here
+        <div v-for="result in results" :key="result.id" >
+          <!-- <NuxtLink :to="`/playlist/${result.id}`"> -->
+          <NuxtLink :to="getResultLink(result)">
+            <div class="result-card flex flex-col h-[14rem] w-[20rem]" :style="{ backgroundColor: getRandomColor() }">
+              <h3 class="text-3xl font-bold text-white h-36">{{ result.name }}</h3>
+              <p class="text-gray-900">Type: {{ result.type }}</p>
+            </div>
+          </NuxtLink>
         </div>
       </div>
+      <div>
+        <h2 class="text-3xl">Songs</h2>
+      </div>
 
-      <h3>Browse All</h3>
-    <div class="genre-cards ">
-      <div v-for="(genre, index) in genres" :key="index" class="genre-card h-[12rem] w-[10rem]"  :style="{ backgroundColor: getRandomColor() }" @click="searchByGenre(genre)">
-        <NuxtLink :to="`/playlist/${genre.id}`"><p class="genre-title">{{ genre }} test</p></NuxtLink>
+      <div>
+        <h2 class="text-3xl">Artists</h2>
+      </div>
+
+      <div>
+        <h2 class="text-3xl">Albums</h2>
+      </div>
+
+      <div>
+        <h2 class="text-3xl">Playlists</h2>
+      </div>
+
+      <div>
+        <h2 class="text-3xl">Podcasts</h2>
+      </div>
+
+      <div>
+        <h2 class="text-3xl">Episodes</h2>
+      </div>
+
+      <h3 class="text-4xl text-white py-2">Browse All</h3>
+    <div class="genre-cards grid grid-cols-5 gap-4">
+      <div v-for="(genre, index) in genres" :key="index" class="genre-card h-[14rem] w-[15rem]"  :style="{ backgroundColor: getRandomColor() }" @click="searchByGenre(genre)">
+        <NuxtLink :to="`/playlist/${genre.id}`"><p class="genre-title text-2xl">{{ genre }}</p></NuxtLink>
       </div>
     </div>
 
@@ -183,6 +213,8 @@
     return results;
   }
 
+  
+
   function addToRecentSearches(query) {
   // Check if the query already exists in the recent searches
   if (!recentSearches.value.includes(query)) {
@@ -195,16 +227,19 @@
     }
   }
 }
-
+function getResultLink(result) {
+    if (result.type === 'track') {
+      return `/track/${result.id}`;
+    } else if (result.type === 'album'){
+      return `/album/${result.id}`;
+    } else {
+      return `/playlist/${result.id}`;      
+    }
+  }
   
   </script>
 
 <style scoped>
-.genre-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
 
 .genre-card {
   padding: 10px;
@@ -217,6 +252,13 @@
 
 .genre-title {
   margin: 0;
+}
+
+.result-card {
+  background-color: #f3f3f3;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 </style>
   

@@ -14,7 +14,7 @@
                         <div class="pl-2">
 
                             
-                            <p>{{ song.track.name}}</p>
+                          <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-4 pr-4"><p class="hover:underline hover:text-gray-500">{{ song.track.name}}</p></NuxtLink>
                             <h3  class="text-gray-500">{{ song.track.artists[0].name}}</h3>
                             <p class="text-gray-500">{{ song.track.duration_ms}}</p>
 
