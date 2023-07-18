@@ -5,4 +5,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
   ],
+  plugins: [
+    '~/plugins/formatDuration.js',
+  ],
 })

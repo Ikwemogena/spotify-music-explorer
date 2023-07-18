@@ -1,9 +1,20 @@
 <template>
     <div class="text-white">
 
-      <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
-            <MusicList :playlistImage="playlistImage" :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
-        </div>
+      <!-- <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
+            <MusicList :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
+        </div> -->
+
+        <a
+  v-for="(genre, index) in genres"
+  :key="index"
+  :href="getGenreLink(genre.id)"
+  class="genre-card"
+  :style="{ backgroundColor: getRandomColor() }"
+>
+  <p class="genre-title">{{ genre.name }}</p>
+</a>
+
 
         
 
@@ -40,12 +51,10 @@ import { useStore } from '@/store/currentSong';
 // colorClass.value = randomColorClass;
 
 
-const {playlist} = useRoute().params;
+const {genre} = useRoute().params;
 const accessToken = ref('');
 const playlistTitle = ref('');
 const playlistSongs = ref([]);
-const playlistImage = ref('');
-
 
 // https://api.spotify.com/v1/playlists/{playlist_id}/tracks
 
@@ -62,6 +71,11 @@ onMounted(async () => {
   //   }
 });
 
+
+function getGenreLink(genreId) {
+  return `https://open.spotify.com/genre/${genreId}`;
+}
+
 async function getPlaylist(token, playlistId) {
   try {
     const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
@@ -77,8 +91,7 @@ async function getPlaylist(token, playlistId) {
     const data = await response.json();
     console.log('Playlist:', data);
     playlistTitle.value = data.name;
-    playlistImage.value = data.images[0].url;
-    // console.log('Playlist Title:', playlistTitle.value);
+    console.log('Playlist Title:', playlistTitle.value);
   } catch (error) {
     console.error(error);
   }

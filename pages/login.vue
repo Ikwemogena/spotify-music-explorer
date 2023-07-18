@@ -118,7 +118,7 @@ async function signInWithSpotify() {
   
   const client_id = '0aea4065bc1b4902ac1f131755def8c8';
   const redirectUri = 'http://localhost:3000/callback';
-  const scope = 'user-read-private user-read-email';
+  const scope = 'user-read-private user-library-read user-read-email streaming user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played';
   
   const signInWithSpotify = () => {
     const authorizationUrl = `https://accounts.spotify.com/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}`;
