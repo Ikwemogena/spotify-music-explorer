@@ -26,11 +26,17 @@
 
 
             <div v-else>
-              <div v-for="(song, index) in playlistSongs" :key="song.id" @click="playSong(song)">
+              <div v-for="(song, index) in playlistSongs" :key="song.id" >
 
-                <div class="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-700 rounded-lg cursor-pointer">
+                <div class="grid grid-cols-2 text-gray-500 py-4 px-5 group hover:bg-gray-700 rounded-lg cursor-pointer">
                   <div class="flex items-center space-x-4">
-                    <p>{{ index + 1 }}</p>
+                    <p class="opacity-100 group-hover:opacity-0 transition-opacity">{{ index + 1 }}</p>
+
+                    <div class="" >
+                      <Icon name="mdi:play" class="none text-3xl opacity-0 group-hover:opacity-100 transition-opacity" @click="playSong(song)"/>
+
+                    </div>
+                    
 
                     <img class="h-10 w-10" :src="song.track.album.images[2].url" alt="">
 
@@ -48,6 +54,46 @@
                       <p>{{ formatDuration(song.track.duration_ms)}}</p>
                     </div>
 
+                    <div  class="opacity-0 group-hover:opacity-100 transition-opacity" @click="toggleOptions(index)">
+                      <Icon name="mdi:dots-horizontal" class="none text-4xl"/>
+                      <!-- @click="showOptions(item)" -->
+                    </div>
+
+
+                    <div v-if="songOptions[index]" class="relative top-[-2.5rem] right-[-3rem] bg-white shadow rounded-md p-2">
+                      <ul>
+                        <li>
+                          <button>Edit</button>
+                        </li>
+                        <li>
+                          <button>Delete</button>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- <div  v-if="songOptions[index]" class="absolute top-[20rem] right-[40rem] bg-white shadow rounded-md p-2">
+                      <ul>
+                        <li>
+                          <button>Edit</button>
+                        </li>
+                        <li>
+                          <button>Delete</button>
+                        </li>
+                      </ul>
+                    </div> -->
+
+
+                    <!-- <div v-if="item.showOptions" class="absolute top-0 right-0 bg-white shadow rounded-md p-2">
+                      <ul>
+                        <li>
+                          <button>Edit</button>
+                        </li>
+                        <li>
+                          <button>Delete</button>
+                        </li>
+                      </ul>
+                    </div> -->
+
                   </div>
                 </div>
 
@@ -63,6 +109,37 @@
 
 <script setup>
 import { useStore } from '@/store/currentSong';
+
+// const showOptions = (item) => {
+//   item.showOptions = !item.showOptions;
+//   console.log('clicked',item.showOptions)
+// };
+// con0
+
+
+const songOptions = ref([]); // Initialize songOptions as an empty array
+
+onMounted(() => {
+  // Populate songOptions array with ref(false) for each song
+  songOptions.value = playlistSongs.map(() => ref(false));
+});
+
+const toggleOptions = (index) => {
+  if (songOptions.value.length > index) {
+    // Check if the index exists in the songOptions array
+    songOptions.value[index].value = !songOptions.value[index].value;
+
+    console.log('clicked', songOptions.value[index].value)
+
+    // Hide other options when one is clicked
+    for (let i = 0; i < songOptions.value.length; i++) {
+      if (i !== index) {
+        songOptions.value[i].value = false;
+      }
+    }
+  }
+};
+
 const isLoading = ref(true);
 
 // const playlistImage = ref('');
@@ -135,75 +212,76 @@ const playerStore = useStore();
 console.log('Playing song:', useStore())
 
 playerStore.setCurrentSong(song);
+// console.log(accessToken.value)
 
-try {
-  // Get a list of available devices
-  const devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
-    headers: {
-      Authorization: `Bearer BQBdUK5Vmv21Ze-wzP_t06WbySMs4h9ztBk_m2Wib0rufvY40jCppL42NQXk_mKzPLUvYAWth99xiCr-sHoWE-kq9KwEWXNgRwNUfcK-Ihlb5tPe00bhM1rWvW189yakeVl1W2rVWffJKvAYoGvJ173aMiwhdRf4JI1ei341IAlpkrtnwsWqOu3ywhgS2UT6q_MhzMWBgo2FcqsLuTl4Pw-_Nkyo3R4`,
-    },
-  });
+// try {
+//   // Get a list of available devices
+//   const devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
+//     headers: {
+//       Authorization: `Bearer ${accessToken.value}`,
+//     },
+//   });
 
-  console.log(devicesResponse.ok)
+//   console.log(devicesResponse.ok)
 
-  if (!devicesResponse.ok) {
-    throw new Error('Failed to retrieve devices');
-  }
+//   if (!devicesResponse.ok) {
+//     throw new Error('Failed to retrieve devices');
+//   }
 
-  const devicesData = await devicesResponse.json();
+//   const devicesData = await devicesResponse.json();
 
-  console.log(devicesData)
+//   console.log(devicesData)
 
-  console.log(devicesData.devices)
-  console.log(devicesResponse.status)
+//   console.log(devicesData.devices)
+//   console.log(devicesResponse.status)
 
-  // Find your phone device
-  const phoneDevice = devicesData.devices.find(device => device.type === 'Computer');
+//   // Find your phone device
+//   const phoneDevice = devicesData.devices.find(device => device.type === 'Computer');
 
-  // const currentDevice = devicesData.devices.find(device => device.is_active);
-  // const phoneDevice = devicesData.devices.find(device => device.is_active);
+//   // const currentDevice = devicesData.devices.find(device => device.is_active);
+//   // const phoneDevice = devicesData.devices.find(device => device.is_active);
 
-  console.log(phoneDevice)
+//   console.log(phoneDevice)
 
-  if (!phoneDevice) {
-    throw new Error('Phone device not found');
-  }
+//   if (!phoneDevice) {
+//     throw new Error('Phone device not found');
+//   }
 
-  const deviceName = phoneDevice.name;
-  const deviceId = phoneDevice.id;
+//   const deviceName = phoneDevice.name;
+//   const deviceId = phoneDevice.id;
 
-  console.log('Phone device name:', deviceName);
+//   console.log('Phone device name:', deviceName);
 
-  // Play the song on your phone
-  const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer BQBdUK5Vmv21Ze-wzP_t06WbySMs4h9ztBk_m2Wib0rufvY40jCppL42NQXk_mKzPLUvYAWth99xiCr-sHoWE-kq9KwEWXNgRwNUfcK-Ihlb5tPe00bhM1rWvW189yakeVl1W2rVWffJKvAYoGvJ173aMiwhdRf4JI1ei341IAlpkrtnwsWqOu3ywhgS2UT6q_MhzMWBgo2FcqsLuTl4Pw-_Nkyo3R4`,
-    },
-    body: JSON.stringify({
-      uris: [`${song.track.uri}`],
-    }),
-  });
+//   // Play the song on your phone
+//   const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+//     method: 'PUT',
+//     headers: {
+//       Authorization: `Bearer BQBdUK5Vmv21Ze-wzP_t06WbySMs4h9ztBk_m2Wib0rufvY40jCppL42NQXk_mKzPLUvYAWth99xiCr-sHoWE-kq9KwEWXNgRwNUfcK-Ihlb5tPe00bhM1rWvW189yakeVl1W2rVWffJKvAYoGvJ173aMiwhdRf4JI1ei341IAlpkrtnwsWqOu3ywhgS2UT6q_MhzMWBgo2FcqsLuTl4Pw-_Nkyo3R4`,
+//     },
+//     body: JSON.stringify({
+//       uris: [`${song.track.uri}`],
+//     }),
+//   });
 
-  if (!response.ok) {
-    throw new Error('Failed to play song');
-  }
+//   if (!response.ok) {
+//     throw new Error('Failed to play song');
+//   }
 
-  // Create a new Audio object
-  const audio = new Audio(song.track.preview_url);
+//   // Create a new Audio object
+//   const audio = new Audio(song.track.preview_url);
 
-  console.log(song)
+//   console.log(song)
 
-  console.log(song.track.preview_url)
-  console.log(song.track.id)
+//   console.log(song.track.preview_url)
+//   console.log(song.track.id)
   
-  // Play the audio
-  audio.play();
+//   // Play the audio
+//   audio.play();
 
-  console.log('Playing song:', song.track.name);
-} catch (error) {
-  console.error(error);
-}
+//   console.log('Playing song:', song.track.name);
+// } catch (error) {
+//   console.error(error);
+// }
 };
 
 

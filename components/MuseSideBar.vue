@@ -1,12 +1,15 @@
 <template>
     <div>
-        <div class="bg-[#212124] text-[#FCFCFC] p-5 md:text-xl sm:text-sm border-r border-gray-900 overflow-y-scroll h-screen no-scrollbar sm:max-w-[12rem] lg:max-w-[15rem] hidden md:inline-flex pb-36">
+        <div class="bg-[#212124] text-[#FCFCFC] p-5 md:text-xl sm:text-sm border-r border-gray-900 overflow-y-scroll h-screen no-scrollbar sm:max-w-[12rem] lg:w-[15rem] hidden md:inline-flex pb-36">
                 <div class="space-y-4 flex flex-col items-start">
                 <img src="../assets/images/MUSE-logo.png" alt="Logo">
-                    <NuxtLink to="/" class="flex flex-col items-center space-x-2 hover:text-white">
-                        <p>Home</p>
+                    <NuxtLink to="/" class="flex items-center space-x-2 hover:text-white">
+                      
+                      <Icon name="heroicons-solid:home" @click="playSong(song)" class="text-2xl cursor-pointer"/>
+                      <p>Home</p>
                     </NuxtLink>
-                    <NuxtLink to="/search" class="flex flex-col items-center space-x-2 hover:text-white">
+                    <NuxtLink to="/search" class="flex items-center space-x-2 hover:text-white">
+                      <Icon name="mdi:magnify" @click="playSong(song)" class="text-2xl cursor-pointer"/>
                         <p>Search</p>
                     </NuxtLink>
                     <NuxtLink class="flex flex-col items-center space-x-2 hover:text-white">
@@ -28,6 +31,8 @@
                         <p>Your Episodes</p>
                     </NuxtLink>
                     <hr class="border-t-[0.1px] border-gray-900"/>
+
+                    
 
 
                     <!-- <div>
