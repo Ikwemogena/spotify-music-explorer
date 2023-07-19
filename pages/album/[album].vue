@@ -15,8 +15,8 @@
     <div v-if="albumTracks.length > 0">
 
       <div v-for="(track, index) in albumTracks" :key="track.id" class="py-4 px-5">
-        <div class="grid grid-cols-3 text-gray-500 hover:bg-gray-700 rounded-lg cursor-pointer">
-          <div class="col-span-2 flex items-center space-x-4">
+        <div class="grid grid-cols-3 text-gray-500 hover:bg-gray-700 rounded-lg cursor-pointer p-1">
+          <div class="col-span-2 flex items-center space-x-4 p-1">
             <p>{{ index + 1 }}</p>
 
             <!-- <img class="h-10 w-10" :src="track.album.images[2].url" alt="" /> -->

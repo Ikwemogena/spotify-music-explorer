@@ -41,13 +41,13 @@
                     
                     <div>
                         <hr class="border-t-[0.1px] border-gray-900"/>
-                    <p class="cursor-pointer hover:text-white" v-for="playlist in playlists" :key="playlist.id" @click="logPlaylist(playlist.id)">
-                        <NuxtLink :to="`/playlist/${playlist.id}`">{{ playlist.name }}</NuxtLink>
-                        
-                </p>
-                </div>
+                        <p class="cursor-pointer hover:text-white py-1" v-for="playlist in playlists" :key="playlist.id" @click="logPlaylist(playlist.id)">
+                          <NuxtLink :to="`/playlist/${playlist.id}`">{{ playlist.name }}</NuxtLink>
+                        </p>
+                    </div>
 
                 </div>
+                <TestModal :showModal="showModal" @close="showModal = false" />
                 
         </div>
 

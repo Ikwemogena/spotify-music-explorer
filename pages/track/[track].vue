@@ -14,8 +14,8 @@
 
     <div v-if="singleTrack.length > 0">
       <div v-for="(track, index) in singleTrack" :key="track.id" class="py-4 px-5">
-        <div class="grid grid-cols-3 text-gray-500 hover:bg-gray-700 rounded-lg cursor-pointer">
-          <div class="col-span-2 flex items-center space-x-4">
+        <div class="grid grid-cols-3 text-gray-500 hover:bg-gray-700 rounded-lg cursor-pointer border-b p-1 py-2">
+          <div class="col-span-2 flex items-center space-x-4 ">
             <p>{{ index + 1 }}</p>
 
             <div>

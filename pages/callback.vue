@@ -1,7 +1,8 @@
 <template>
-  <div class="container">
+  <!-- <div class="container">
       <h1>Callback Page</h1>
-  </div>
+  </div> -->
+  <MuseLoader />
 </template>
   
 <script setup>

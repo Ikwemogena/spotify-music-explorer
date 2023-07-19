@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
+    "nuxt-icon"
   ],
   plugins: [
     '~/plugins/formatDuration.js',
