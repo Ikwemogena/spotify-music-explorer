@@ -1,60 +1,66 @@
 <template>
-    <div>
-      <!-- Your other content goes here -->
-      
-  
-      <!-- Queue Modal -->
-      <div v-if="showQueueModal" class="queue-modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Queue</h2>
-            <button @click="showQueueModal = false">Close</button>
-          </div>
-          <div class="queue-list">
-            <div v-for="(song, index) in queue" :key="song.id" class="song-item">
-              <div>
-                <img :src="song.albumCover" alt="Album Cover" class="album-cover" />
-              </div>
-              <div class="song-info">
-                <p class="song-name">{{ song.name }}</p>
-                <p class="artist">{{ song.artist }}</p>
-              </div>
-              <div class="song-actions">
-                <button @click="playNow(index)">Play Now</button>
-                <button @click="removeFromQueue(index)">Remove</button>
-              </div>
+  <div>
+    <!-- Your other content goes here -->
+
+    <!-- Queue Modal v-if="showQueueModal" -->
+    <div  class="queue-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Queue</h2>
+          <button @click="showQueueModal = false">Close</button>
+        </div>
+        <div class="queue-list bg-black">
+          <div v-for="(song, index) in queue" :key="song.id" class="song-item">
+            <div>
+              <!-- <img :src="song.track.images[2].url" alt="Album Cover" class="album-cover" /> -->
+            </div>
+            <div class="song-info">
+              <p class="song-name">{{ song.name }}</p>
+              <!-- <p class="artist">{{ song.artist }}</p> -->
+            </div>
+            <div class="song-actions">
+              <button @click="playNow(index)">Play Now</button>
+              <button @click="removeFromQueue(index)">Remove</button>
             </div>
           </div>
-          <div class="queue-controls">
-            <button @click="clearQueue">Clear Queue</button>
-            <button @click="shuffleQueue">Shuffle Queue</button>
-            <!-- Add more queue control buttons here as needed -->
-          </div>
+        </div>
+        <div class="queue-controls">
+          <button @click="clearQueue">Clear Queue</button>
+          <button @click="shuffleQueue">Shuffle Queue</button>
+          <!-- Add more queue control buttons here as needed -->
         </div>
       </div>
     </div>
-  </template>
-<script setup>
+  </div>
+</template>
+
+<!-- <script setup>
 // Import necessary dependencies and functions
 
+import { useQueue } from '@/store/queue';
+const playerStore = useQueue();
+
+const queue = playerStore.queue;
+
+console.log('queue: ', queue)
 const showQueueModal = ref(false);
 
 // Replace the following data with your actual queue data fetched from the backend or store
-const queue = ref([
-  {
-    id: 1,
-    name: "Song 1",
-    artist: "Artist 1",
-    albumCover: "album_cover_1.jpg",
-  },
-  {
-    id: 2,
-    name: "Song 2",
-    artist: "Artist 2",
-    albumCover: "album_cover_2.jpg",
-  },
-  // Add more songs to the queue array as needed
-]);
+// const queue = ref([
+//   {
+//     id: 1,
+//     name: "Song 1",
+//     artist: "Artist 1",
+//     albumCover: "album_cover_1.jpg",
+//   },
+//   {
+//     id: 2,
+//     name: "Song 2",
+//     artist: "Artist 2",
+//     albumCover: "album_cover_2.jpg",
+//   },
+//   // Add more songs to the queue array as needed
+// ]);
 
 function playNow(index) {
   // Implement logic to play the selected song immediately
@@ -76,8 +82,44 @@ function shuffleQueue() {
   // You can use an array shuffling algorithm here
 }
 
-</script>
+</script> -->
 
+<script setup>
+// Import necessary dependencies and functions
+
+import { ref } from 'vue';
+import { useQueue } from '@/store/queue';
+
+const playerStore = useQueue();
+
+const queue = playerStore.queue;
+
+console.log(queue)
+
+const showQueueModal = ref(false);
+
+function playNow(index) {
+  // Implement logic to play the selected song immediately
+  // Use the song data at `queue[index]` to play the song
+  console.log('Play Now:', queue[index]);
+}
+
+function removeFromQueue(index) {
+  // Implement logic to remove the selected song from the queue
+  queue.splice(index, 1);
+}
+
+function clearQueue() {
+  // Implement logic to clear the entire queue
+  queue.length = 0;
+}
+
+function shuffleQueue() {
+  // Implement logic to shuffle the songs in the queue
+  // You can use an array shuffling algorithm here
+}
+
+</script>
 <style>
 /* Add your CSS styles for the queue modal here */
 /* Customize the styles as per your application's design */
