@@ -1,7 +1,9 @@
 <template>
     <div class="text-white">
+      <!-- <MuseLoader /> -->
+      <MuseLoader v-if="isLoading" />
 
-      <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
+      <div class="flex-grow h-screen overflow-y-scroll no-scrollbar" v-else>
             <MusicList :playlistImage="playlistImage" :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
         </div>
 
@@ -11,51 +13,36 @@
 </template>
 
 <script setup>
-
-// const { playlistSongs: likedSongs } = defineProps(['likedSongs']);
-
-import { useStore } from '@/store/currentSong';
-
-// const colorClass = ref('');
-// const colors = [
-//   "from-indigo-500",
-//   "from-blue-500",
-//   "from-lightBlue-500",
-//   "from-cyan-500",
-//   "from-emerald-500",
-//   "from-green-500",
-//   "from-lime-500",
-//   "from-yellow-500",
-//   "from-amber-500",
-//   "from-orange-500",
-//   "from-red-500",
-//   "from-pink-500",
-//   "from-rose-500",
-//   "from-fuchsia-500",
-//   "from-purple-500",
-//   "from-violet-500",
-// ];
-
-// const randomColorClass = colors[Math.floor(Math.random() * colors.length)];
-// colorClass.value = randomColorClass;
-
+const isLoading = ref(true);
 
 const {playlist} = useRoute().params;
+
 const accessToken = ref('');
+
 const playlistTitle = ref('');
+
 const playlistSongs = ref([]);
+
 const playlistImage = ref('');
 
 
-// https://api.spotify.com/v1/playlists/{playlist_id}/tracks
 
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
-  console.log('Saved Items:', accessToken.value);
+
+  try {
+      await getPlaylist(accessToken.value, playlist);
+      await getPlaylistsItems(accessToken.value, playlist);
+      isLoading.value = false; // Data fetching is done, set isLoading to false
+      console.log('done')
+    } catch (error) {
+      console.error(error);
+      isLoading.value = false; // Set isLoading to false even on error to hide the loader
+    }
 
   //   await getPlaylists(accessToken.value)
-  await getPlaylist(accessToken.value, playlist);
-  getPlaylistsItems(accessToken.value, playlist)
+  // await getPlaylist(accessToken.value, playlist);
+  // getPlaylistsItems(accessToken.value, playlist)
 
   //   if (accessToken.value) {
     

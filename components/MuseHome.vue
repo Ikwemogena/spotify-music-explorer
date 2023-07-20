@@ -18,7 +18,7 @@
                 <p class="hover:underline hover:text-gray-500">{{ song.track.name}}</p>
               </NuxtLink>
               <h3 class="text-gray-500">{{ song.track.artists[0].name}}</h3>
-              <p class="text-gray-500">{{ song.track.duration_ms}}</p>
+              <p class="text-gray-500">{{ formatDuration(song.track.duration_ms)}}</p>
             </div>
           </div>
           <!-- <button class="" @click="playSong(song)">play</button> -->
@@ -148,7 +148,7 @@ const playerStore = useStore();
 
 console.log('Playing song:', useStore())
 
-playerStore.setCurrentSong(song.track.uri);
+playerStore.setCurrentSong(song);
 
 // try {
 //   // Get a list of available devices
@@ -219,6 +219,12 @@ playerStore.setCurrentSong(song.track.uri);
 //   console.error(error);
 // }
 };
+
+function formatDuration(durationMs) {
+  const minutes = Math.floor(durationMs / 60000);
+  const seconds = ((durationMs % 60000) / 1000).toFixed(0);
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
 
 </script>
 

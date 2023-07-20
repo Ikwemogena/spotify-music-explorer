@@ -1,5 +1,6 @@
 <template>
   <div class="h-screen overflow-y-scroll no-scrollbar">
+    <MuseLoader v-if="isLoading" />
     <section
       :class="`flex items-end space-x-7 bg-gradient-to-b ${colorClass} h-70 text-white p-8 w-full`"
       v-if="playlistTitle"
@@ -62,12 +63,20 @@ const playlistTitle = ref('');
 const playlistImage = ref('');
 const albumTracks = ref([]);
 
+const isLoading = ref(true);
+
 const queue = ref([]);
 
 const { album } = useRoute().params;
 
 onMounted(async () => {
-  await getAlbum(accessToken, album);
+  try {
+    await getAlbum(accessToken, album);
+    isLoading = false;
+    } catch (error) {
+      console.error(error);
+      isLoading.value = false; // Set isLoading to false even on error to hide the loader
+    }
 });
 
 async function getAlbum(token, albumId) {
