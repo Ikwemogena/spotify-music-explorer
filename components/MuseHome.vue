@@ -9,12 +9,12 @@
         
       </div>
 
-      <div class="lg:grid grid-cols-3 gap-6 justify-center playlist-card pb-10 px-12 sm:pb-3">
+      <div class="flex flex-col lg:grid grid-cols-3 gap-6 justify-center playlist-card pb-10 px-12 sm:pb-3">
         <div class="flex items-start justify-between rounded-lg shadow-2xl sm:pb-2" v-for="song in recentlyPlayed" :key="song.id">
           <div class="flex items-center">
             <img class="rounded-lg w-[7rem] h-[7rem]" :src="song.track.album.images[1].url" alt="">
-            <div class="pl-2">
-              <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-4 pr-4">
+            <div class="pl-2 pr-4">
+              <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-2 pr-4">
                 <p class="hover:underline hover:text-gray-500">{{ song.track.name}}</p>
               </NuxtLink>
               <h3 class="text-gray-500">{{ song.track.artists[0].name}}</h3>
@@ -29,19 +29,19 @@
 
     <div class="">
       <div class="flex justify-between px-12 py-4">
-        <h2 class="text-xl md:text-2xl lg:text-3xl ">Recommended Playlists</h2>
+        <h2 class="text-xl md:text-2xl lg:text-3xl">Recommended Playlists</h2>
         <div class="flex gap-4 text-3xl ">
           <button class="prev-btn " @click="slidePrev">&#8249;</button>
           <button class="next-btn" @click="slideNext">&#8250;</button>
         </div>
       </div>
 
-      <div class="lg:flex gap-3 justify-center pb-10 ">
+      <div class="lg:flex flex-col items-center gap-4 justify-center lg:pb-10 sm:flex-col sm:items-center sm:gap-2 sm:justify-center">
         <div class="rounded-lg shadow-2xl" v-for="playlist in recommendedPlaylists" :key="playlist.id">
           <NuxtLink :to="`/playlist/${playlist.id}`">
             <img class="rounded-lg w-50 h-60" :src="playlist.images[0].url" alt="">
             <div class="py-4 px-2">
-              <p>{{ playlist.name}}</p>
+              <p class="md:text-xl sm:text-sm">{{ playlist.name}}</p>
               <h3 class="w-36 text-gray-500">{{ playlist.description}}</h3>
             </div>
           </NuxtLink>

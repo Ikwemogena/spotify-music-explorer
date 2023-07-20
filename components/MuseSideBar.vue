@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="bg-[#212124] text-[#FCFCFC] p-5 md:text-xl sm:text-sm border-r border-gray-900 overflow-y-scroll h-screen no-scrollbar sm:max-w-[12rem] lg:w-[18rem] hidden md:inline-flex pb-36">
+        <div v-if="isOpen" class="bg-[#212124] text-[#FCFCFC] p-5 md:text-xl sm:text-sm border-r border-gray-900 overflow-y-scroll h-screen no-scrollbar sm:max-w-[12rem] lg:w-[18rem]  md:inline-flex pb-36">
                 <div class="space-y-4 flex flex-col items-start">
                 <img src="../assets/images/MUSE-logo.png" alt="Logo">
                     <NuxtLink to="/" class="flex items-center space-x-2 hover:text-white">
@@ -65,6 +65,9 @@
 
 <script setup>
 
+const { isOpen } = defineProps(['isOpen']);
+// const { shouldSidebarBeOpen } = defineProps(['shouldSidebarBeOpen']);
+
 const showModal = ref(false)
 
 const accessToken = ref('');
@@ -121,5 +124,7 @@ const logPlaylist = (playlist) => {
     color: #EF2B2B;
 ;
 }
+
+
 
 </style>

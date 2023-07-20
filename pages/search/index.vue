@@ -22,7 +22,7 @@
         </div>
 
 
-      <div id="searchResults" class="grid grid-cols-4 gap-4 pt-4">
+      <div id="searchResults" class="flex flex-col items-center lg:grid grid-cols-4 gap-4 pt-4">
         <!-- Search results will be dynamically updated here -->
         <div v-for="result in results" :key="result.id">
           <!-- <NuxtLink :to="`/playlist/${result.id}`"> -->
@@ -59,12 +59,12 @@
         <h2 class="text-3xl">Episodes</h2>
       </div> -->
 
-      <h3 class="text-4xl text-white py-2">Browse All</h3>
-    <div class="genre-cards grid grid-cols-5 gap-4">
-      <div v-for="(genre, index) in genres" :key="index" class="genre-card h-[14rem] w-[15rem]"  :style="{ backgroundColor: getRandomColor() }" @click="searchByGenre(genre)">
-        <NuxtLink :to="`/playlist/${genre.id}`"><p class="genre-title text-2xl">{{ genre }}</p></NuxtLink>
+      <h3 class="text-2xl lg:text-4xl text-white py-2">Browse All</h3>
+      <div class="genre-cards flex flex-col items-center lg:grid grid-cols-5 gap-4 ">
+        <div v-for="(genre, index) in genres" :key="index" class="genre-card h-[14rem] w-[15rem]"  :style="{ backgroundColor: getRandomColor() }" @click="searchByGenre(genre)">
+          <NuxtLink :to="`/playlist/${genre.id}`"><p class="genre-title text-2xl">{{ genre }}</p></NuxtLink>
+        </div>
       </div>
-    </div>
 
 
     </div>

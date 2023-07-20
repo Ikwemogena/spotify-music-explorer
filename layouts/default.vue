@@ -1,21 +1,26 @@
 <template>
     <div>
 
+      <!-- <button @click="toggleSidebar">Toggle Sidebar</button> -->
+      
         <main class="flex">
-            <MuseSideBar />
+            <MuseSideBar :isOpen="isSidebarOpen" />
 
             <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
 
-                <header class="bg-black text-white p-4">
-                    <div class="flex justify-between">
+                <header class="bg-black text-white p-4" v-if="userProfile">
+
+                    <div class="flex justify-between items-center">
+                      
                         <div class="flex gap-2">
+                          <Icon @click="toggleSidebar" name="mdi:menu" class="text-3xl"/>
                             <button>Back</button>
                             <button>Forward</button>
                         </div>
 
 
                         <div>
-                            <div v-if="userProfile">{{ userProfile.display_name }}</div>
+                            <div>{{ userProfile.display_name }}</div>
                         </div>
                     </div>
                 </header>
@@ -42,6 +47,15 @@
 </template>
 
 <script setup>
+
+import { ref } from 'vue';
+const isSidebarOpen = ref(false);
+
+function toggleSidebar() {
+  console.log('toggleSidebar')
+  isSidebarOpen.value = !isSidebarOpen.value;
+}
+
 
 import {useTokenStore} from '@/store/storeAccessToken';
 
@@ -112,6 +126,19 @@ body {
     background-color: rgba(33, 33, 36, 1);
 }
 
+.sidebar-enter-active,
+.sidebar-leave-active {
+  transition: transform 0.3s ease;
+}
 
+/* Define the starting position for the slide-in transition */
+.sidebar-enter {
+  transform: translateX(-100%);
+}
+
+/* Define the ending position for the slide-out transition */
+.sidebar-leave-to {
+  transform: translateX(-100%);
+}
 
 </style>
