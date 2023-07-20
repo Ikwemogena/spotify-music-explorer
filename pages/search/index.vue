@@ -7,26 +7,35 @@
         <input class="rounded p-2" type="text" v-model="query" placeholder="Search for songs, podcasts, or albums" @change="search"/>
       <button @click="search" class="border p-2 rounded px-3 text-white">Search</button>
       </div>
-        <div id="recentSearches">
+        <!-- <div id="recentSearches">
             <h3>Recent Searches</h3>
             <ul>
                 <li v-for="search in recentSearches" :key="search">{{ search }}</li>
             </ul>
+        </div> -->
+
+        <!-- Input chips for sorting -->
+        <div class="flex gap-2 pt-2">
+          <button class="chips" @click="sortResults('relevance')">Relevance</button>
+          <button class="chips" @click="sortResults('popularity')">Popularity</button>
+          <button class="chips" @click="sortResults('genre')">Genre</button>
         </div>
 
-      <div id="searchResults" class="grid grid-cols-4 gap-4">
-        Search results will be dynamically updated here
-        <div v-for="result in results" :key="result.id" >
+
+      <div id="searchResults" class="grid grid-cols-4 gap-4 pt-4">
+        <!-- Search results will be dynamically updated here -->
+        <div v-for="result in results" :key="result.id">
           <!-- <NuxtLink :to="`/playlist/${result.id}`"> -->
           <NuxtLink :to="getResultLink(result)">
             <div class="result-card flex flex-col h-[14rem] w-[20rem]" :style="{ backgroundColor: getRandomColor() }">
               <h3 class="text-3xl font-bold text-white h-36">{{ result.name }}</h3>
+              <img src="" alt="">
               <p class="text-gray-900">Type: {{ result.type }}</p>
             </div>
           </NuxtLink>
         </div>
       </div>
-      <div>
+      <!-- <div>
         <h2 class="text-3xl">Songs</h2>
       </div>
 
@@ -48,7 +57,7 @@
 
       <div>
         <h2 class="text-3xl">Episodes</h2>
-      </div>
+      </div> -->
 
       <h3 class="text-4xl text-white py-2">Browse All</h3>
     <div class="genre-cards grid grid-cols-5 gap-4">
@@ -182,6 +191,7 @@
           id: track.id,
           name: track.name,
           type: 'track',
+          popularity: track.popularity,
         });
       }
     }
@@ -194,6 +204,7 @@
           id: episode.id,
           name: episode.name,
           type: 'episode',
+          popularity: episode.popularity,
         });
       }
     }
@@ -206,6 +217,7 @@
           id: album.id,
           name: album.name,
           type: 'album',
+          popularity: album.popularity,          
         });
       }
     }
@@ -213,6 +225,24 @@
     return results;
   }
 
+  function sortResults(sortBy) {
+  switch (sortBy) {
+    case 'relevance':
+      // Sort the results by relevance (e.g., the default order)
+      results.value.sort((a, b) => a.id.localeCompare(b.id));
+      break;
+    case 'popularity':
+      // Sort the results by popularity (e.g., based on a popularity metric)
+      results.value.sort((a, b) => a.popularity - b.popularity);
+      break;
+    case 'genre':
+      // Sort the results by genre (e.g., alphabetically)
+      results.value.sort((a, b) => a.genre.localeCompare(b.genre));
+      break;
+    default:
+      break;
+  }
+}
   
 
   function addToRecentSearches(query) {
@@ -259,6 +289,22 @@ function getResultLink(result) {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
+}
+
+.chips {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background-color: #e2e8f0;
+  border: 1px solid #cbd5e0;
+  color: #4a5568;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.chips:hover {
+  background-color: #cbd5e0;
+  border-color: #a0aec0;
+  color: #2d3748;
 }
 </style>
   

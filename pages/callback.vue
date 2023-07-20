@@ -1,7 +1,8 @@
 <template>
-  <div class="container">
+  <!-- <div class="container">
       <h1>Callback Page</h1>
-  </div>
+  </div> -->
+  <MuseLoader />
 </template>
   
 <script setup>
@@ -9,14 +10,14 @@
 
   const store = useTokenStore();
 
-  console.log('store in callback: ', store);
+  // console.log('store in callback: ', store);
 
     // const store = useStore();
   
   // Wrap the code in a check to run only in the browser environment
   if (process.client) {
     const code = new URLSearchParams(window.location.search).get('code');
-    console.log('Authorization code outside function: ', code);
+    // console.log('Authorization code outside function: ', code);
     getAccessToken(code);
   }
   
@@ -76,6 +77,11 @@
     }
   }
 
+
+  // import {useTokenStore} from '@/store/storeAccessToken';
+
+  // const store = useTokenStore();
+  // updateValue(accessToken);
 
   function updateValue(access_token) {
     store.setAccessToken(access_token);

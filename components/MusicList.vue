@@ -1,12 +1,10 @@
 <template>
+  
     <div class="text-white">
         <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
             <!-- <div v-for="(song, index) in likedSongs" :key="song.id" @click="playSong(song)">
                 <p>{{ song }}</p>
             </div> -->
-
-            
-
             <!-- <section class="flex items-end space-x-7 bg-gradient-to-b to-black from-red-500 h-80 text-white p-8"> -->
             <section :class="`flex items-end space-x-7 bg-gradient-to-b ${colorClass} h-70 text-white p-8 w-full`" v-if="playlistTitle">
                 <!-- <img src="https://mosaic.scdn.co/640/ab67616d0000b2730a7a29be24e9d5cf030ccd6bab67616d0000b27310426b9f47266bad330be9edab67616d0000b2734467b1b14466adeec3d7ee9fab67616d0000b273d77e0b25066081fd50e66a14" alt="" class="h-44 w-44 shadow-2xl"> -->
@@ -21,29 +19,89 @@
 
             </section>
 
-            <div v-for="(song, index) in playlistSongs" :key="song.id" @click="playSong(song)">
+            <div v-if="playlistSongs.length === 0" class="flex justify-center h-full pt-4">
+              <p class="text-gray-500 text-2xl">No songs in this playlist</p>
+              <button class="text-blue-500 hover:underline" @click="openAddSongsModal">Add songs</button>
+            </div>
 
-              <div class="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-700 rounded-lg cursor-pointer">
-                <div class="flex items-center space-x-4">
-                  <p>{{ index + 1 }}</p>
 
-                  <img class="h-10 w-10" :src="song.track.album.images[2].url" alt="">
+            <div v-else>
+              <div v-for="(song, index) in playlistSongs" :key="song.id" >
 
-                  <div>
-                    <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-4 pr-4"><p class="w-36 lg:w-64 truncate text-white hover:underline">{{ song.track.name }}</p></NuxtLink>
+                <div class="grid grid-cols-3 text-gray-500 py-4 px-5 group hover:bg-gray-700 rounded-lg cursor-pointer">
+                  <div class="flex items-center space-x-4">
+                    <p class="opacity-100 group-hover:opacity-0 transition-opacity">{{ index + 1 }}</p>
+
+                    <div class="" >
+                      <Icon name="mdi:play" class="none text-3xl opacity-0 group-hover:opacity-100 transition-opacity" @click="playSong(song)"/>
+
+                    </div>
                     
-                    <!-- <p>{{ song.added_at }}</p> -->
-                    
-                    <p class="w-40">{{ song.track.artists[0].name }}</p>
-                  </div>
 
-                  <div class="flex items-center justify-between ml-auto md:ml-0">
-                    <NuxtLink :to="`/album/${song.track.album.id}`" class="flex justify-between gap-4 pr-4"><p class="w-40 hidden md:inline hover:underline truncate pr-6">{{ song.track.album.name }}</p></NuxtLink>
-                    <!-- <p>{{ song.track.duration_ms }}</p> -->
-                    <p>{{ formatDuration(song.track.duration_ms)}}</p>
-                  </div>
+                    <img class="h-10 w-10" :src="song.track.album.images[2].url" alt="">
 
+                    <div>
+                      <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-4 pr-4"><p class="w-36 lg:w-64 truncate text-white hover:underline">{{ song.track.name }}</p></NuxtLink>
+                      
+                      <!-- <p>{{ song.added_at }}</p> -->
+                      
+                      <p class="w-40">{{ song.track.artists[0].name }}</p>
+                    </div>
+
+                    <div class="flex items-center justify-between ml-auto md:ml-0">
+                      <NuxtLink :to="`/album/${song.track.album.id}`" class="flex justify-between gap-4 pr-4"><p class="w-40 hidden md:inline hover:underline truncate pr-6">{{ song.track.album.name }}</p></NuxtLink>
+                      <!-- <p>{{ song.track.duration_ms }}</p> -->
+                      <p>{{ formatDuration(song.track.duration_ms)}}</p>
+                    </div>
+
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <!-- <p>queue</p> -->
+                      <button @click="addToQueue(song)">Queue</button>
+                    </div>
+
+                    <div  class="opacity-0 group-hover:opacity-100 transition-opacity" @click="toggleOptions(index)">
+                      <Icon name="mdi:dots-horizontal" class="none text-4xl"/>
+                      <!-- @click="showOptions(item)" -->
+                    </div>
+
+
+                    <!-- <div v-if="songOptions[index]" class="relative top-[-2.5rem] right-[-3rem] bg-white shadow rounded-md p-2">
+                      <ul>
+                        <li>
+                          <button>Edit</button>
+                        </li>
+                        <li>
+                          <button>Delete</button>
+                        </li>
+                      </ul>
+                    </div> -->
+
+                    <!-- <div  v-if="songOptions[index]" class="absolute top-[20rem] right-[40rem] bg-white shadow rounded-md p-2">
+                      <ul>
+                        <li>
+                          <button>Edit</button>
+                        </li>
+                        <li>
+                          <button>Delete</button>
+                        </li>
+                      </ul>
+                    </div> -->
+
+
+                    <!-- <div v-if="item.showOptions" class="absolute top-0 right-0 bg-white shadow rounded-md p-2">
+                      <ul>
+                        <li>
+                          <button>Edit</button>
+                        </li>
+                        <li>
+                          <button>Delete</button>
+                        </li>
+                      </ul>
+                    </div> -->
+
+                  </div>
                 </div>
+
               </div>
 
             </div>
@@ -56,6 +114,35 @@
 
 <script setup>
 import { useStore } from '@/store/currentSong';
+
+const songOptions = ref([]); // Initialize songOptions as an empty array
+
+const queue = ref([]);
+
+onMounted(() => {
+  // Populate songOptions array with ref(false) for each song
+  songOptions.value = playlistSongs.map(() => ref(false));
+});
+
+const toggleOptions = (index) => {
+  if (songOptions.value.length > index) {
+    // Check if the index exists in the songOptions array
+    songOptions.value[index].value = !songOptions.value[index].value;
+
+    console.log('clicked', songOptions.value[index].value)
+
+    // Hide other options when one is clicked
+    for (let i = 0; i < songOptions.value.length; i++) {
+      if (i !== index) {
+        songOptions.value[i].value = false;
+      }
+    }
+  }
+};
+
+
+
+const isLoading = ref(true);
 
 // const playlistImage = ref('');
 const colorClass = ref('');
@@ -82,20 +169,8 @@ const randomColorClass = colors[Math.floor(Math.random() * colors.length)];
 colorClass.value = randomColorClass;
 
 // const playlistTitle = ref('');
-const accessToken = ref('');
+// const accessToken = ref('');
 
-// console.log(playlistTitle)
-
-// const { playlistSongs } = defineProps(['playlistSongs']);
-// const props = defineProps({
-//   playlistTitle: String,
-//   playlistSongs: Array,
-// });
-
-// const props = defineProps({
-//   playlistTitle: String,
-//   playlistSongs: Array,
-// });
 
 const { playlistTitle, playlistSongs } = defineProps({
   playlistTitle: String,
@@ -103,99 +178,120 @@ const { playlistTitle, playlistSongs } = defineProps({
   playlistImage: String,
 });
 
-console.log('liked songs here:', playlistSongs);
+// console.log('liked songs here:', playlistSongs);
 
+const accessToken = ref('')
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
-  console.log('Saved Items:', accessToken.value);
-
-  //   await getPlaylists(accessToken.value)
-//   await getPlaylist(accessToken.value, playlist);
-//   getPlaylistsItems(accessToken.value, playlist)
-
-  //   if (accessToken.value) {
-    
-  //   }
+  // console.log('Saved Items:', accessToken.value);
 });
 
 
 
 const playSong = async (song) => {
+  console.log(song)
 
 const playerStore = useStore();
 
 console.log('Playing song:', useStore())
 
 playerStore.setCurrentSong(song);
+// console.log(accessToken.value)
 
-try {
-  // Get a list of available devices
-  const devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
-    headers: {
-      Authorization: `Bearer BQBdUK5Vmv21Ze-wzP_t06WbySMs4h9ztBk_m2Wib0rufvY40jCppL42NQXk_mKzPLUvYAWth99xiCr-sHoWE-kq9KwEWXNgRwNUfcK-Ihlb5tPe00bhM1rWvW189yakeVl1W2rVWffJKvAYoGvJ173aMiwhdRf4JI1ei341IAlpkrtnwsWqOu3ywhgS2UT6q_MhzMWBgo2FcqsLuTl4Pw-_Nkyo3R4`,
-    },
-  });
+// try {
+//   // Get a list of available devices
+//   const devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
+//     headers: {
+//       Authorization: `Bearer ${accessToken.value}`,
+//     },
+//   });
 
-  console.log(devicesResponse.ok)
+//   console.log(devicesResponse.ok)
 
-  if (!devicesResponse.ok) {
-    throw new Error('Failed to retrieve devices');
-  }
+//   if (!devicesResponse.ok) {
+//     throw new Error('Failed to retrieve devices');
+//   }
 
-  const devicesData = await devicesResponse.json();
+//   const devicesData = await devicesResponse.json();
 
-  console.log(devicesData)
+//   console.log(devicesData)
 
-  console.log(devicesData.devices)
-  console.log(devicesResponse.status)
+//   console.log(devicesData.devices)
+//   console.log(devicesResponse.status)
 
-  // Find your phone device
-  const phoneDevice = devicesData.devices.find(device => device.type === 'Computer');
+//   // Find your phone device
+//   const phoneDevice = devicesData.devices.find(device => device.type === 'Computer');
 
-  // const currentDevice = devicesData.devices.find(device => device.is_active);
-  // const phoneDevice = devicesData.devices.find(device => device.is_active);
+//   // const currentDevice = devicesData.devices.find(device => device.is_active);
+//   // const phoneDevice = devicesData.devices.find(device => device.is_active);
 
-  console.log(phoneDevice)
+//   console.log(phoneDevice)
 
-  if (!phoneDevice) {
-    throw new Error('Phone device not found');
-  }
+//   if (!phoneDevice) {
+//     throw new Error('Phone device not found');
+//   }
 
-  const deviceName = phoneDevice.name;
-  const deviceId = phoneDevice.id;
+//   const deviceName = phoneDevice.name;
+//   const deviceId = phoneDevice.id;
 
-  console.log('Phone device name:', deviceName);
+//   console.log('Phone device name:', deviceName);
 
-  // Play the song on your phone
-  const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer BQBdUK5Vmv21Ze-wzP_t06WbySMs4h9ztBk_m2Wib0rufvY40jCppL42NQXk_mKzPLUvYAWth99xiCr-sHoWE-kq9KwEWXNgRwNUfcK-Ihlb5tPe00bhM1rWvW189yakeVl1W2rVWffJKvAYoGvJ173aMiwhdRf4JI1ei341IAlpkrtnwsWqOu3ywhgS2UT6q_MhzMWBgo2FcqsLuTl4Pw-_Nkyo3R4`,
-    },
-    body: JSON.stringify({
-      uris: [`${song.track.uri}`],
-    }),
-  });
+//   // Play the song on your phone
+//   const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+//     method: 'PUT',
+//     headers: {
+//       Authorization: `Bearer BQBdUK5Vmv21Ze-wzP_t06WbySMs4h9ztBk_m2Wib0rufvY40jCppL42NQXk_mKzPLUvYAWth99xiCr-sHoWE-kq9KwEWXNgRwNUfcK-Ihlb5tPe00bhM1rWvW189yakeVl1W2rVWffJKvAYoGvJ173aMiwhdRf4JI1ei341IAlpkrtnwsWqOu3ywhgS2UT6q_MhzMWBgo2FcqsLuTl4Pw-_Nkyo3R4`,
+//     },
+//     body: JSON.stringify({
+//       uris: [`${song.track.uri}`],
+//     }),
+//   });
 
-  if (!response.ok) {
-    throw new Error('Failed to play song');
-  }
+//   if (!response.ok) {
+//     throw new Error('Failed to play song');
+//   }
 
-  // Create a new Audio object
-  const audio = new Audio(song.track.preview_url);
+//   // Create a new Audio object
+//   const audio = new Audio(song.track.preview_url);
 
-  console.log(song)
+//   console.log(song)
 
-  console.log(song.track.preview_url)
-  console.log(song.track.id)
+//   console.log(song.track.preview_url)
+//   console.log(song.track.id)
   
-  // Play the audio
-  audio.play();
+//   // Play the audio
+//   audio.play();
 
-  console.log('Playing song:', song.track.name);
-} catch (error) {
-  console.error(error);
-}
+//   console.log('Playing song:', song.track.name);
+// } catch (error) {
+//   console.error(error);
+// }
+};
+
+
+const addToQueue = async (song) => {
+  queue.value.push(song.track.uri); // Add the selected song to the queue
+  console.log('Added to queue:', song.track.uri);
+
+  // console.log(song.track.uri)
+  console.log(accessToken.value)
+
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${song.track.uri}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken.value}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add the song to the queue.');
+    }
+
+    console.log('Added to queue:', song.track.name);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 
