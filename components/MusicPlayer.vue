@@ -12,7 +12,7 @@
 
       <div class="flex items-center justify-evenly">
         
-          <Icon name="mdi:skip-previous" />
+          <Icon name="mdi:skip-previous" @click="previous" />
           <div class="flex pb-4">
             <button v-if="!isPlaying" @click="play" class="w-10 h-10">
               <Icon name="mdi:play" class="text-2xl cursor-pointer bg-white rounded-full p-1 m-2 w-10 h-10" color="black"/>
@@ -21,14 +21,14 @@
               <Icon name="mdi:pause" class="text-2xl cursor-pointer bg-white rounded-full p-1 m-2 w-10 h-10" color="black"/>
             </button>
           </div>
-          <Icon name="mdi:skip-next" />
+          <Icon name="mdi:skip-next" @click="next" />
       </div>
 
       <div class=" volume-slider flex items-center space-x-3 md:space-x-4 justify-end">
           <!-- <p class="w-14 md:w-28">Volume</p> -->
           <input type="range" min="0" max="100" v-model="volume" @input="changeVolume"/>
           <div class="queue-text flex items-center">
-        <p @click="showModal = true">Q</p>
+        <!-- <p @click="showModal = true">Q</p> -->
         
       </div>
           
@@ -49,6 +49,11 @@
 </template>
   
 <script setup>
+
+// definePageMeta({
+//   middleware: 'auth'
+// })
+
 import { useStore } from '@/store/currentSong';
 console.log('player store', useStore())
 
@@ -60,11 +65,31 @@ const currentSong = ref(playerStore.currentSong); // Get the current song from t
 const showModal = ref(false)
 const seekPercentage = ref(0);
 
+// import { useTokenStore } from "@/store/storeAccessToken";
 
+// console.log(useTokenStore)
+  
+// const { accessToken } = useTokenStore();
+// console.log('access token from music player', accessToken)
+
+const accessToken = ref('')
+
+
+onMounted(async () => {
+  
+  accessToken.value = localStorage.getItem('accessToken') || '';
+
+  console.log(accessToken.value)
+
+  // await getRecentlyPlayed(accessToken.value);
+  // await getRecommendedPlaylists(accessToken.value);
+  // await getHottestPlaylists(accessToken.value);
+});
 
 // Update the currentSong ref when it changes in the store
 watch(() => playerStore.currentSong, (newSong) => {
   currentSong.value = newSong;
+  console.log('current song', currentSong.value)
   isPlaying.value = true;
   play()
 });
@@ -78,22 +103,76 @@ function togglePlayback() {
   }
 }
 
-function next() {
+async function next() {
+  console.log('Next track');
+  if (!accessToken.value) {
+    // If there is no access token, redirect to the login page or your desired authentication flow
+    router.push('/login'); // Replace '/login' with the path to your login page
+    return;
+  }
+
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me/player/next', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken.value}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to skip to the next track.');
+    }
+
+    console.log('Skipped to the next track.');
+  } catch (error) {
+    console.error(error);
+  }
   console.log('Next track');
 }
 
+async function previous() {
+  play();
+  console.log('Previous track');
+  if (!accessToken.value) {
+    // If there is no access token, redirect to the login page or your desired authentication flow
+    router.push('/login'); // Replace '/login' with the path to your login page
+    return;
+  }
+
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me/player/previous', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken.value}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to skip to the previous track.');
+    }
+
+    console.log('Skipped to the previous track.');
+  } catch (error) {
+    console.error(error);
+  }
+}
 function changeVolume() {
+
+  // if (!accessToken.value) {
+  //   // If there is no access token, redirect to the login page or your desired authentication flow
+  //   router.push('/login'); // Replace '/login' with the path to your login page
+  //   return;
+  // }
   // Send volume change command to Spotify API
   // Replace 'YOUR_ACCESS_TOKEN' with the actual access token
   // const accessToken = 'BQCRSnalQrG0wAXiGasyfZcx0h8fqaIm8btMb4SPc4Wdlth9jvij61hK5fBdSt3pYRzX-iFOUbeUSimiUBERA3H74xjOFeezkVu5xabcpfN2jwvv-bg1h5SNcxOmOouGNhmKyHrxyz8UpwMbTYpeXabpTVuSIZj_ikJhIgextDtLXRra2aUc0qHz_2jcUFJZW1Hqpr1Immm955JsyHXX-v7zZ3-TR2nWEEQwjOAqozadj9QfSev9VAz2elBopivfBE5DLrQhj7SN9Wr4IWcUuJczWbBIr6fYFTK5gQY';
   // const deviceId = "4926ee8a3a6ca168fbf310c4c06ab91ba7c2e2c0";
-  const accessToken = ref('BQBYqa7mrkvXkEQ14tEoqcda2yXtwEf6N8QutgxnJnxW9xvvmgsCN6d11kcbIp8ELwM2MxLEB8GKa0PHnx7QUcMpNM5Qf2ICy-s0kAKMPSJgzNpk48b-hWrZqqOyIXCcFtNCwLzoRNOBCs2UaWTRKs8NKPBZGuIl4A2kjhsQk56RSHQwUNaX7-aXYf2JQM3iMXS3mYUiXb42beIC9M6r1gvRQHSyXZ8YyWbJlELagQNqHUAzoR0jy2nGOFvswTAtAFJCGquUK_DuQhtSsi45JnqZICY-82R4KiCw1LU')
   const newVolume = volume.value;
 
   fetch(`https://api.spotify.com/v1/me/player/volume?volume_percent=${newVolume}`, {
     method: 'PUT',
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken.value}`
     }
   })
   .then(response => {
@@ -108,10 +187,16 @@ function changeVolume() {
   console.log('Volume changed:', volume.value);
 }
 
-const accessToken = ref('BQBYqa7mrkvXkEQ14tEoqcda2yXtwEf6N8QutgxnJnxW9xvvmgsCN6d11kcbIp8ELwM2MxLEB8GKa0PHnx7QUcMpNM5Qf2ICy-s0kAKMPSJgzNpk48b-hWrZqqOyIXCcFtNCwLzoRNOBCs2UaWTRKs8NKPBZGuIl4A2kjhsQk56RSHQwUNaX7-aXYf2JQM3iMXS3mYUiXb42beIC9M6r1gvRQHSyXZ8YyWbJlELagQNqHUAzoR0jy2nGOFvswTAtAFJCGquUK_DuQhtSsi45JnqZICY-82R4KiCw1LU')
+
 async function play() {
+  if (!accessToken.value) {
+    // If there is no access token, redirect to the login page or your desired authentication flow
+    router.push('/login'); // Replace '/login' with the path to your login page
+    return;
+  }
+
   isPlaying.value = true;
-  console.log('Play audio');
+
   try {
     // Get a list of available devices
     const devicesResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
@@ -172,7 +257,7 @@ async function play() {
   }
 
   // Create a new Audio object
-  const audio = new Audio(song.track.preview_url);
+  // const audio = new Audio(song.track.preview_url);
 
   // console.log(song)
 
@@ -189,6 +274,12 @@ async function play() {
 }
 
 function pause() {
+
+  if (!accessToken.value) {
+    // If there is no access token, redirect to the login page or your desired authentication flow
+    router.push('/login'); // Replace '/login' with the path to your login page
+    return;
+  }
   isPlaying.value = false;
   console.log('Pause audio');
 
@@ -200,7 +291,7 @@ function pause() {
   fetch(`https://api.spotify.com/v1/me/player/pause?device_id=15f39c11672626d4669801e325391ebda976099b`, {
     method: 'PUT',
     headers: {
-      'Authorization': `Bearer BQBYqa7mrkvXkEQ14tEoqcda2yXtwEf6N8QutgxnJnxW9xvvmgsCN6d11kcbIp8ELwM2MxLEB8GKa0PHnx7QUcMpNM5Qf2ICy-s0kAKMPSJgzNpk48b-hWrZqqOyIXCcFtNCwLzoRNOBCs2UaWTRKs8NKPBZGuIl4A2kjhsQk56RSHQwUNaX7-aXYf2JQM3iMXS3mYUiXb42beIC9M6r1gvRQHSyXZ8YyWbJlELagQNqHUAzoR0jy2nGOFvswTAtAFJCGquUK_DuQhtSsi45JnqZICY-82R4KiCw1LU`
+      'Authorization': `Bearer ${accessToken.value}`
     }
   })
   .then(response => {

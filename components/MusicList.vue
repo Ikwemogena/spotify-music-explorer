@@ -28,7 +28,7 @@
             <div v-else>
               <div v-for="(song, index) in playlistSongs" :key="song.id" >
 
-                <div class="grid grid-cols-2 text-gray-500 py-4 px-5 group hover:bg-gray-700 rounded-lg cursor-pointer">
+                <div class="grid grid-cols-3 text-gray-500 py-4 px-5 group hover:bg-gray-700 rounded-lg cursor-pointer">
                   <div class="flex items-center space-x-4">
                     <p class="opacity-100 group-hover:opacity-0 transition-opacity">{{ index + 1 }}</p>
 
@@ -54,13 +54,18 @@
                       <p>{{ formatDuration(song.track.duration_ms)}}</p>
                     </div>
 
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <!-- <p>queue</p> -->
+                      <button @click="addToQueue(song)">Queue</button>
+                    </div>
+
                     <div  class="opacity-0 group-hover:opacity-100 transition-opacity" @click="toggleOptions(index)">
                       <Icon name="mdi:dots-horizontal" class="none text-4xl"/>
                       <!-- @click="showOptions(item)" -->
                     </div>
 
 
-                    <div v-if="songOptions[index]" class="relative top-[-2.5rem] right-[-3rem] bg-white shadow rounded-md p-2">
+                    <!-- <div v-if="songOptions[index]" class="relative top-[-2.5rem] right-[-3rem] bg-white shadow rounded-md p-2">
                       <ul>
                         <li>
                           <button>Edit</button>
@@ -69,7 +74,7 @@
                           <button>Delete</button>
                         </li>
                       </ul>
-                    </div>
+                    </div> -->
 
                     <!-- <div  v-if="songOptions[index]" class="absolute top-[20rem] right-[40rem] bg-white shadow rounded-md p-2">
                       <ul>
@@ -110,14 +115,9 @@
 <script setup>
 import { useStore } from '@/store/currentSong';
 
-// const showOptions = (item) => {
-//   item.showOptions = !item.showOptions;
-//   console.log('clicked',item.showOptions)
-// };
-// con0
-
-
 const songOptions = ref([]); // Initialize songOptions as an empty array
+
+const queue = ref([]);
 
 onMounted(() => {
   // Populate songOptions array with ref(false) for each song
@@ -139,6 +139,8 @@ const toggleOptions = (index) => {
     }
   }
 };
+
+
 
 const isLoading = ref(true);
 
@@ -167,20 +169,8 @@ const randomColorClass = colors[Math.floor(Math.random() * colors.length)];
 colorClass.value = randomColorClass;
 
 // const playlistTitle = ref('');
-const accessToken = ref('');
+// const accessToken = ref('');
 
-// console.log(playlistTitle)
-
-// const { playlistSongs } = defineProps(['playlistSongs']);
-// const props = defineProps({
-//   playlistTitle: String,
-//   playlistSongs: Array,
-// });
-
-// const props = defineProps({
-//   playlistTitle: String,
-//   playlistSongs: Array,
-// });
 
 const { playlistTitle, playlistSongs } = defineProps({
   playlistTitle: String,
@@ -188,24 +178,18 @@ const { playlistTitle, playlistSongs } = defineProps({
   playlistImage: String,
 });
 
-console.log('liked songs here:', playlistSongs);
+// console.log('liked songs here:', playlistSongs);
 
+const accessToken = ref('')
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
-  console.log('Saved Items:', accessToken.value);
-
-  //   await getPlaylists(accessToken.value)
-//   await getPlaylist(accessToken.value, playlist);
-//   getPlaylistsItems(accessToken.value, playlist)
-
-  //   if (accessToken.value) {
-    
-  //   }
+  // console.log('Saved Items:', accessToken.value);
 });
 
 
 
 const playSong = async (song) => {
+  console.log(song)
 
 const playerStore = useStore();
 
@@ -282,6 +266,32 @@ playerStore.setCurrentSong(song);
 // } catch (error) {
 //   console.error(error);
 // }
+};
+
+
+const addToQueue = async (song) => {
+  queue.value.push(song.track.uri); // Add the selected song to the queue
+  console.log('Added to queue:', song.track.uri);
+
+  // console.log(song.track.uri)
+  console.log(accessToken.value)
+
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${song.track.uri}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken.value}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add the song to the queue.');
+    }
+
+    console.log('Added to queue:', song.track.name);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 
