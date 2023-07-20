@@ -2,7 +2,7 @@
 //     // Check if the access token is present in the store (you might store it in Vuex)
 //     const accessToken = store.state.accessToken;
 
-import { useTokenStore } from "store/storeAccessToken";
+// import { useTokenStore } from "store/storeAccessToken";
 
   
    
@@ -14,11 +14,11 @@ import { useTokenStore } from "store/storeAccessToken";
 // }
 
 
-export default defineNuxtRouteMiddleware(() => {
-  const { accessToken } = useTokenStore();
+// export default defineNuxtRouteMiddleware(() => {
+//   const { accessToken } = useTokenStore();
 
-  if (!accessToken) {
-    console.log('no access token')
-      return navigateTo('/login')
-  }
-})
+//   if (!accessToken) {
+//     console.log('no access token')
+//       return navigateTo('/login')
+//   }
+// })
