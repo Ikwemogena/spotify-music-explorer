@@ -36,11 +36,11 @@
         </div>
       </div>
 
-      <div class="lg:flex flex-col items-center gap-4 justify-center lg:pb-10 sm:flex-col sm:items-center sm:gap-2 sm:justify-center">
+      <div class="flex gap-4 justify-center recommended">
         <div class="rounded-lg shadow-2xl" v-for="playlist in recommendedPlaylists" :key="playlist.id">
           <NuxtLink :to="`/playlist/${playlist.id}`">
             <img class="rounded-lg w-50 h-60" :src="playlist.images[0].url" alt="">
-            <div class="py-4 px-2">
+            <div class="py-4 pt-2">
               <p class="md:text-xl sm:text-sm">{{ playlist.name}}</p>
               <h3 class="w-36 text-gray-500">{{ playlist.description}}</h3>
             </div>
@@ -238,5 +238,15 @@ function formatDuration(durationMs) {
   background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+
+
+@media screen and (max-width: 468px) {
+  .recommended{
+    flex-direction: column;
+    align-items: center;
+  
+}
 }
 </style>
