@@ -64,6 +64,7 @@ const volume = ref(50);
 const currentSong = ref(playerStore.currentSong); // Get the current song from the store
 const showModal = ref(false)
 const seekPercentage = ref(0);
+const phoneDevice = ref(null);
 
 // import { useTokenStore } from "@/store/storeAccessToken";
 
@@ -221,19 +222,21 @@ async function play() {
   console.log(devicesResponse.status)
 
   // Find your phone device
-  const phoneDevice = devicesData.devices.find(device => device.type === 'Computer');
+  // const phoneDevice = devicesData.devices.find(device => device.type === 'Computer');
+    // const phoneDevice = devicesData.devices.find(device => device.is_active);
 
-  // const currentDevice = devicesData.devices.find(device => device.is_active);
-  // const phoneDevice = devicesData.devices.find(device => device.is_active);
 
-  console.log(phoneDevice)
+  // const currentDevice = devicesData.devices.find(device => device.is_active === true);
+  phoneDevice.value = devicesData.devices.find(device => device.is_active === true);
 
-  if (!phoneDevice) {
+  // console.log(phoneDevice)
+
+  if (!phoneDevice.value) {
     throw new Error('Phone device not found');
   }
 
-  const deviceName = phoneDevice.name;
-  const deviceId = phoneDevice.id;
+  const deviceName = phoneDevice.value.name;
+  const deviceId = phoneDevice.value.id;
 
   console.log('Phone device name:', deviceName);
 
@@ -288,7 +291,11 @@ function pause() {
   // const accessToken = accessToken.value;
   // const deviceId = 'YOUR_DEVICE_ID';
 
-  fetch(`https://api.spotify.com/v1/me/player/pause?device_id=15f39c11672626d4669801e325391ebda976099b`, {
+  // 15f39c11672626d4669801e325391ebda976099b
+
+  console.log('pause device',phoneDevice.value.id)
+
+  fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${phoneDevice.value.id}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${accessToken.value}`

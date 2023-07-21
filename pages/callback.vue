@@ -71,6 +71,7 @@
       // Redirect to the home page
       const router = useRouter();
       await router.push('/');
+      window.location.reload();
     } catch (error) {
       console.error('Error:', error);
       // Handle the error appropriately
