@@ -1,6 +1,7 @@
 <template>
-  <div class="h-24 bg-gradient-to-b from-black to-gray-900 text-white grid grid-cols-3 text-xs md:text-base px-2 md:px-8" v-if="currentSong">
-      <div class="flex items-center space-x-4" >
+  <!-- <div class="h-24 bg-gradient-to-b from-black to-gray-900 text-white grid grid-cols-3 gap-10 text-xs md:text-base px-2 md:px-8" v-if="currentSong"> -->
+    <div class=" h-24 bg-gradient-to-b from-black to-gray-900 text-white flex justify-between px-6" v-if="currentSong">
+      <div class="flex items-center gap-2" >
           <img class="hidden md:inline h-10 w-10" :src="currentSong?.track?.album?.images[0]?.url" alt="">
 
           <div class="">
@@ -10,35 +11,31 @@
 
       </div>
 
-      <div class="flex items-center justify-evenly">
+      <div class="flex items-center gap-2">
         
           <Icon name="mdi:skip-previous" @click="previous" />
+
           <div class="flex pb-4">
-            <button v-if="!isPlaying" @click="play" class="w-10 h-10">
-              <Icon name="mdi:play" class="text-2xl cursor-pointer bg-white rounded-full p-1 m-2 w-10 h-10" color="black"/>
-            </button>
-            <button v-else @click="pause" class="w-10 h-10">
-              <Icon name="mdi:pause" class="text-2xl cursor-pointer bg-white rounded-full p-1 m-2 w-10 h-10" color="black"/>
+            <button @click="play" class="h-10">
+              <Icon
+                :name="isPlaying ? 'mdi:pause' : 'mdi:play'"
+                class="text-2xl cursor-pointer bg-white rounded-full p-1 m-2 w-10 h-10"
+                color="black"
+              />
             </button>
           </div>
           <Icon name="mdi:skip-next" @click="next" />
       </div>
 
-      <div class=" volume-slider flex items-center space-x-3 md:space-x-4 justify-end">
-          <!-- <p class="w-14 md:w-28">Volume</p> -->
-          <input type="range" min="0" max="100" v-model="volume" @input="changeVolume"/>
-          <div class="queue-text flex items-center">
-        <!-- <p @click="showModal = true">Q</p> -->
-        
-      </div>
-          
+      <div class=" volume-slider flex items-center justify-end">
+          <input type="range" min="0" max="100" v-model="volume" @input="changeVolume" class="custom-slider"/>
       </div>
 
       <!-- <div class="queue-text flex items-center">
         <p>Queue</p>
       </div> -->
 
-      <TestModal :showModal="showModal" @close="showModal = false" />
+      <!-- <TestModal :showModal="showModal" @close="showModal = false" /> -->
 
       
 
@@ -317,8 +314,8 @@ function pause() {
 .music-player {
   display: flex;
   /* flex-direction: column; */
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center;
+  align-items: center; */
   gap: 1rem;
 }
 
@@ -341,25 +338,14 @@ function pause() {
   color: #fff;
 }
 
-.play-icon::before {
-  content: '▶️';
-}
-
-.pause-icon::before {
-  content: '⏸️';
-}
-
-.next-icon::before {
-  content: '⏭️';
-}
-
 .volume-slider {
-  width: 150px;
+  /* width: 150px; */
 }
 
 /* Customize the appearance of the volume slider as desired */
-input[type="range"] {
-  /* -webkit-appearance: none; */
+/* input[type="range"] {
+  color: red;
+  -webkit-appearance: none;
   width: 100%;
   height: 6px;
   background: #b3b3b3;
@@ -374,6 +360,7 @@ input[type="range"]:hover {
 }
 
 input[type="range"]::-webkit-slider-thumb {
+  background-color: red;
   -webkit-appearance: none;
   appearance: none;
   width: 16px;
@@ -385,8 +372,39 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  background: #00bfff;
+  background-color: red;
+} */
+
+.custom-slider {
+  color: #9f9e9e;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #9f9e9e;
+  border-radius: 3px;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
+.custom-slider:hover {
+  opacity: 1;
+}
+
+.custom-slider::-webkit-slider-thumb {
+  background-color: #333131;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #292727;
+  cursor: pointer;
+  transition: background 0.15s ease-in-out;
+}
+
+.custom-slider::-webkit-slider-thumb:hover {
+  background-color: #b3b3b3;
+}
 </style>
   

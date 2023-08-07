@@ -4,6 +4,7 @@
       <div>
         <MuseHome/>
       </div>
+      <UNotification timeout="60000" />
 
   </div>
 </template>

@@ -24,7 +24,7 @@
   async function getAccessToken(authorizationCode) {
     console.log('Authorization code in function:', authorizationCode);
     const tokenEndpoint = 'https://accounts.spotify.com/api/token';
-    const redirectUri = 'https://spotify-music-explorer.vercel.app/callback';
+    const redirectUri = 'http://localhost:3000/callback';
     const client_id = '0aea4065bc1b4902ac1f131755def8c8';
     const clientSecret = 'aa246931cfbb41bc8bd4acdd7bae2991';
   

@@ -4,7 +4,7 @@
 
     <div class="">
       <div class="flex justify-between items-start px-12 py-4">
-        <h2 class="text-xl md: text-2xl lg:text-3xl ">Recently Played</h2>
+        <h2 class="text-xl md:text-2xl lg:text-3xl ">Recently Played</h2>
         <!-- <Icon name="uil:github" /> -->
         
       </div>

@@ -22,7 +22,7 @@
   const successMessage = ref('');
   
   const client_id = '0aea4065bc1b4902ac1f131755def8c8';
-  const redirectUri = 'https://spotify-music-explorer.vercel.app/callback';
+  const redirectUri = 'http://localhost:3000/callback';
   const scope = 'user-read-private user-library-read user-read-email streaming user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played playlist-modify-public playlist-modify-private';
   
   const signInWithSpotify = () => {
