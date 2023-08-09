@@ -25,11 +25,8 @@ onMounted(async () => {
 
 function updateValue(access_token) {
   store.setAccessToken(access_token);
-  console.log('store in callback: ', store);
 }
 
 </script>
 
-<style scoped>
-/* Add your scoped styles here */
-</style>
+<style scoped></style>

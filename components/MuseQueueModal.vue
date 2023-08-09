@@ -30,11 +30,10 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQueue } from '@/store/queue';
-const { queue, clearQueue } = useQueue();
 
+const { queue, clearQueue } = useQueue();
 const props = defineProps({
   queueModal: {
     type: Boolean,
@@ -42,15 +41,8 @@ const props = defineProps({
   },
 });
 
-
-console.log(props)
-console.log(clearQueue)
-
 const playlistTitle = ref('');
 const playlistDescription = ref('');
-
-const router = useRouter();
-
 const accessToken = ref('');
 
 onMounted(async () => {
@@ -60,21 +52,13 @@ onMounted(async () => {
   console.log('Saved Items:', accessToken.value);
 });
 
-
 const emits = defineEmits(['close']);
+
 function closeModal() {
   emits('close');
   playlistTitle.value = '';
   playlistDescription.value = '';
 }
-
-//   function clearQueue() {
-//     const updateQueue = useQueue();
-//     updateQueue.clearQueue
-//     console.log('clear queue', queue)
-//     // clearQueue
-//   }
-
 </script>
   
 <style scoped>

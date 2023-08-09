@@ -7,11 +7,10 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "nuxt-icon",
   ],
-  plugins: [
-    '~/plugins/formatDuration.js',
-  ],
   runtimeConfig: {
-    spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    spotifyClientID: process.env.SPOTIFY_CLIENT_ID,
+    public: {
+      spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      spotifyClientID: process.env.SPOTIFY_CLIENT_ID,
+    }
   }
 })
