@@ -27,7 +27,6 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
   
   const showModal = ref(false);
   const searchQuery = ref('');
@@ -71,9 +70,6 @@
   }
   
   function addSong(song) {
-    // Perform the logic to add the song to the playlist
-    // You can make an API request to your backend to handle the song addition
-  
     console.log('Adding song:', song);
   
     // Clear the search query and results

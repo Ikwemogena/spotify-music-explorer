@@ -20,13 +20,10 @@
           <div class="col-span-2 flex items-center space-x-4 p-1">
             <p class="opacity-100 group-hover:opacity-0 transition-opacity">{{ index + 1 }}</p>
 
-                    <div class="" >
-                      <Icon name="mdi:play" class="none text-3xl opacity-0 group-hover:opacity-100 transition-opacity" @click="playSong(track)"/>
+              <div class="" >
+                <Icon name="mdi:play" class="none text-3xl opacity-0 group-hover:opacity-100 transition-opacity" @click="playSong(track)"/>
 
-                    </div>
-
-            <!-- <img class="h-10 w-10" :src="track.album.images[2].url" alt="" /> -->
-
+              </div>
             <div>
               <p class="w-36 lg:w-64 truncate text-white">{{ track.name }}</p>
               <p class="w-40">{{ track.artists[0].name }}</p>
@@ -37,17 +34,15 @@
             <p>{{ formatDuration(track.duration_ms) }}</p>
 
             <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <!-- <p>queue</p> -->
-                      <button @click="addToQueue(track)">Queue</button>
-                    </div>
+              <!-- <p>queue</p> -->
+              <button @click="addToQueue(track)">Queue</button>
+            </div>
 
-                    <div  class="opacity-0 group-hover:opacity-100 transition-opacity" @click="toggleOptions(index)">
-                      <Icon name="mdi:dots-horizontal" class="none text-4xl"/>
-                      <!-- @click="showOptions(item)" -->
-                    </div>
-          </div>
-
-          
+            <div  class="opacity-0 group-hover:opacity-100 transition-opacity" @click="toggleOptions(index)">
+              <Icon name="mdi:dots-horizontal" class="none text-4xl"/>
+              <!-- @click="showOptions(item)" -->
+            </div>
+          </div>          
         </div>
       </div>
     </div>
@@ -55,17 +50,16 @@
 </template>
 
 <script setup>
+
 import { useStore } from '@/store/currentSong';
-import { useRoute } from 'vue-router';
 
 const accessToken = localStorage.getItem('accessToken') || '';
 const playlistTitle = ref('');
 const playlistImage = ref('');
 const albumTracks = ref([]);
-
 const isLoading = ref(true);
 
-const queue = ref([]);
+// const queue = ref([]);
 
 const { album } = useRoute().params;
 
@@ -75,7 +69,7 @@ onMounted(async () => {
     isLoading = false;
     } catch (error) {
       console.error(error);
-      isLoading.value = false; // Set isLoading to false even on error to hide the loader
+      isLoading.value = false;
     }
 });
 
@@ -92,13 +86,11 @@ async function getAlbum(token, albumId) {
     }
 
     const data = await response.json();
+
     playlistTitle.value = data.name;
     playlistImage.value = data.images[0].url;
-
-    console.log(playlistImage.value)
     albumTracks.value = data.tracks.items;
 
-    // console.log(albumTracks.value[0].uri)
   } catch (error) {
     console.error(error);
   }
@@ -110,37 +102,26 @@ function formatDuration(durationMs) {
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
-const playSong = async (song) => {
-  // console.log(song.album)
-  // const { album: { images }, name, artists, uri } = song;
+// const playSong = async (song) => {
+//   // console.log(song.album)
+//   // const { album: { images }, name, artists, uri } = song;
 
-  // console.log(song)
+//   // console.log(song)
   
-  // Create a new object containing the information
-  // const songInfo = {
-  //   image: images[0].url,
-  //   name,
-  //   artist: artists[0].name,
-  //   uri,
-  // };
+//   // Create a new object containing the information
+//   // const songInfo = {
+//   //   image: images[0].url,
+//   //   name,
+//   //   artist: artists[0].name,
+//   //   uri,
+//   // };
 
-const playerStore = useStore();
-
-console.log(songInfo)
-
-console.log('Playing song:', useStore())
-
-// playerStore.setCurrentSong(song);
-playerStore.setCurrentSong(songInfo);
-};
+//   const playerStore = useStore();
+  
+//   playerStore.setCurrentSong(songInfo);
+// };
 
 const addToQueue = async (song) => {
-  // queue.value.push(song.uri); // Add the selected song to the queue
-  console.log('Added to queue:', song.uri);
-
-  // console.log(song.track.uri)
-  console.log(accessToken.value)
-
   try {
     const response = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${song.uri}`, {
       method: 'POST',
@@ -152,8 +133,6 @@ const addToQueue = async (song) => {
     if (!response.ok) {
       throw new Error('Failed to add the song to the queue.');
     }
-
-    // console.log('Added to queue:', song.track.name);
   } catch (error) {
     console.error(error);
   }
