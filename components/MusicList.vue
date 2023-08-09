@@ -54,16 +54,16 @@
                       <p>{{ formatDuration(song.track.duration_ms)}}</p>
                     </div>
 
-                    <div  class="opacity-0 group-hover:opacity-100 transition-opacity" @click="toggleOptions(index)">
-                      <Icon name="ic:sharp-downloading" class="none text-2xl hover:text-white"/>
+                    <div  class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-4 items-center" @click="addToQueue(song)">
+                      <Icon name="mdi:plus-box-multiple-outline" class="none text-2xl hover:text-white"/>
+                      
                       <!-- @click="showOptions(item)" -->
                     </div>
 
                     <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <!-- <p>queue</p> -->
-                      <button @click="addToQueue(song)">Queue</button>
+                      <Icon name="ic:twotone-share" class="none text-2xl hover:text-white"/>
+                      
                     </div>
-
                     
 
 
@@ -168,10 +168,6 @@ const colors = [
 
 const randomColorClass = colors[Math.floor(Math.random() * colors.length)];
 colorClass.value = randomColorClass;
-
-// const playlistTitle = ref('');
-// const accessToken = ref('');
-
 
 const { playlistTitle, playlistSongs } = defineProps({
   playlistTitle: String,
@@ -280,7 +276,6 @@ const addToQueue = async (song) => {
   console.log('Added to queue:', song.track.uri);
 
   // console.log(song.track.uri)
-  console.log(accessToken.value)
 
   try {
     const response = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${song.track.uri}`, {

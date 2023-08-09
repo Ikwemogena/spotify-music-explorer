@@ -1,17 +1,12 @@
 <template>
     <div class="text-white">
-
-      <!-- <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
-            <MusicList :playlistTitle="playlistTitle" :playlistSongs="playlistSongs"/>
-        </div> -->
-
         <a
-  v-for="(genre, index) in genres"
-  :key="index"
-  :href="getGenreLink(genre.id)"
-  class="genre-card"
-  :style="{ backgroundColor: getRandomColor() }"
->
+          v-for="(genre, index) in genres"
+          :key="index"
+          :href="getGenreLink(genre.id)"
+          class="genre-card"
+          :style="{ backgroundColor: getRandomColor() }"
+        >
   <p class="genre-title">{{ genre.name }}</p>
 </a>
 
@@ -23,34 +18,6 @@
 
 <script setup>
 
-// const { playlistSongs: likedSongs } = defineProps(['likedSongs']);
-
-import { useStore } from '@/store/currentSong';
-
-// const colorClass = ref('');
-// const colors = [
-//   "from-indigo-500",
-//   "from-blue-500",
-//   "from-lightBlue-500",
-//   "from-cyan-500",
-//   "from-emerald-500",
-//   "from-green-500",
-//   "from-lime-500",
-//   "from-yellow-500",
-//   "from-amber-500",
-//   "from-orange-500",
-//   "from-red-500",
-//   "from-pink-500",
-//   "from-rose-500",
-//   "from-fuchsia-500",
-//   "from-purple-500",
-//   "from-violet-500",
-// ];
-
-// const randomColorClass = colors[Math.floor(Math.random() * colors.length)];
-// colorClass.value = randomColorClass;
-
-
 const {genre} = useRoute().params;
 const accessToken = ref('');
 const playlistTitle = ref('');
@@ -61,14 +28,9 @@ const playlistSongs = ref([]);
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
   console.log('Saved Items:', accessToken.value);
-
-  //   await getPlaylists(accessToken.value)
   await getPlaylist(accessToken.value, playlist);
-  getPlaylistsItems(accessToken.value, playlist)
-
-  //   if (accessToken.value) {
-    
-  //   }
+  getPlaylistsItems(accessToken.value, playlist);
+  getGenreLink(genre.id);
 });
 
 

@@ -10,4 +10,8 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/formatDuration.js',
   ],
+  runtimeConfig: {
+    spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    spotifyClientID: process.env.SPOTIFY_CLIENT_ID,
+  }
 })

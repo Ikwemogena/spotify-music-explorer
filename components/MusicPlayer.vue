@@ -224,10 +224,8 @@ async function play() {
 
 
   // const currentDevice = devicesData.devices.find(device => device.is_active === true);
-  phoneDevice.value = devicesData.devices.find(device => device.is_active === true);
-
-  // console.log(phoneDevice)
-
+    phoneDevice.value = devicesData.devices.find(device => device.is_active === true);
+  
   if (!phoneDevice.value) {
     throw new Error('Phone device not found');
   }
@@ -235,10 +233,8 @@ async function play() {
   const deviceName = phoneDevice.value.name;
   const deviceId = phoneDevice.value.id;
 
-  console.log('Phone device name:', deviceName);
 
   const trackUri = currentSong.value.track.uri;
-  console.log(currentSong.value.track.uri)
 
   // Play the song on your phone
   const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
@@ -247,7 +243,6 @@ async function play() {
       Authorization: `Bearer ${accessToken.value}`,
     },
     body: JSON.stringify({
-      // uris: [`spotify:track:${song.track.id}`],
       uris: [trackUri],
     }),
   });
@@ -255,19 +250,6 @@ async function play() {
   if (!response.ok) {
     throw new Error('Failed to play song');
   }
-
-  // Create a new Audio object
-  // const audio = new Audio(song.track.preview_url);
-
-  // console.log(song)
-
-  // console.log(song.track.preview_url)
-  // console.log(song.track.id)
-  
-  // Play the audio
-  // audio.play();
-
-  // console.log('Playing song:', song.track.name);
 } catch (error) {
   console.error(error);
 }
@@ -281,16 +263,6 @@ function pause() {
     return;
   }
   isPlaying.value = false;
-  console.log('Pause audio');
-
-  // Send pause command to Spotify API
-  // Replace 'YOUR_ACCESS_TOKEN' with the actual access token
-  // const accessToken = accessToken.value;
-  // const deviceId = 'YOUR_DEVICE_ID';
-
-  // 15f39c11672626d4669801e325391ebda976099b
-
-  console.log('pause device',phoneDevice.value.id)
 
   fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${phoneDevice.value.id}`, {
     method: 'PUT',
@@ -313,9 +285,6 @@ function pause() {
 <style scoped>
 .music-player {
   display: flex;
-  /* flex-direction: column; */
-  /* justify-content: center;
-  align-items: center; */
   gap: 1rem;
 }
 
@@ -338,46 +307,10 @@ function pause() {
   color: #fff;
 }
 
-.volume-slider {
-  /* width: 150px; */
-}
-
-/* Customize the appearance of the volume slider as desired */
-/* input[type="range"] {
-  color: red;
-  -webkit-appearance: none;
-  width: 100%;
-  height: 6px;
-  background: #b3b3b3;
-  border-radius: 3px;
-  outline: none;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-input[type="range"]:hover {
-  opacity: 1;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  background-color: red;
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-  transition: background 0.15s ease-in-out;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  background-color: red;
-} */
 
 .custom-slider {
   color: #9f9e9e;
-  -webkit-appearance: none;
+  /* -webkit-appearance: none; */
   width: 100%;
   height: 6px;
   background: #9f9e9e;

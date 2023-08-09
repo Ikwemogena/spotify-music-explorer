@@ -31,6 +31,10 @@
                       <Icon name="mdi:folder-plus" class="text-xl cursor-pointer"/>
                         <p>Create Playlist</p>
                     </NuxtLink>
+                    <NuxtLink to="" @click="queueModal = true; console.log('clicked')" class="flex items-center space-x-2">
+                      <Icon name="mdi:music-box-multiple-outline" class="text-xl "/>
+                        <p class="cursor-pointer">Queue</p>
+                    </NuxtLink>
                   </div>
                   
                   <hr class="border-t-[0.1px] border-gray-700 w-full"/>
@@ -62,6 +66,7 @@
 
               </div>
               <TestModal :showModal="showModal" @close="showModal = false" />
+              <MuseQueueModal :queueModal="queueModal" @close="queueModal = false" />
               
       </div>
 
@@ -74,6 +79,8 @@ const { isOpen } = defineProps(['isOpen']);
 // const { shouldSidebarBeOpen } = defineProps(['shouldSidebarBeOpen']);
 
 const showModal = ref(false)
+
+const queueModal = ref(false)
 
 const accessToken = ref('');
 

@@ -1,7 +1,4 @@
 <template>
-  <!-- <div class="container">
-      <h1>Callback Page</h1>
-  </div> -->
   <MuseLoader />
 </template>
   
@@ -10,14 +7,9 @@
 
   const store = useTokenStore();
 
-  // console.log('store in callback: ', store);
-
-    // const store = useStore();
-  
-  // Wrap the code in a check to run only in the browser environment
   if (process.client) {
     const code = new URLSearchParams(window.location.search).get('code');
-    // console.log('Authorization code outside function: ', code);
+    console.log('Authorization code outside function: ', code);
     getAccessToken(code);
   }
   
@@ -56,33 +48,18 @@
       console.log('Access Token:', accessToken);
       console.log('Refresh Token:', refreshToken);
       // Set the access token in local storage
-      // useStorage('accessToken', accessToken);
       localStorage.setItem('accessToken', accessToken);
-
 
       updateValue(accessToken);
 
-      
-  
-      // Set the access token in the store
-    //   const store = useStore();
-      // store.commit('setAccessToken', accessToken);
-  
       // Redirect to the home page
       const router = useRouter();
       await router.push('/');
       window.location.reload();
     } catch (error) {
       console.error('Error:', error);
-      // Handle the error appropriately
     }
   }
-
-
-  // import {useTokenStore} from '@/store/storeAccessToken';
-
-  // const store = useTokenStore();
-  // updateValue(accessToken);
 
   function updateValue(access_token) {
     store.setAccessToken(access_token);
