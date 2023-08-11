@@ -14,7 +14,7 @@ if (process.client) {
 
 async function getAccessToken(authorizationCode) {
   const tokenEndpoint = 'https://accounts.spotify.com/api/token';
-  const redirectUri = 'http://localhost:3000/callback';
+  const redirectUri = 'https://spotify-music-explorer.vercel.app/callback';
   const { spotifyClientSecret, spotifyClientID } = useRuntimeConfig().public
   const data = {
     grant_type: 'authorization_code',
