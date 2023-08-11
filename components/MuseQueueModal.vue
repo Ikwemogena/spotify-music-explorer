@@ -30,12 +30,11 @@
 </template>
   
 <script setup>
-import { useRouter } from 'vue-router';
 import { useQueue } from '@/store/queue';
 
 const { queue, clearQueue } = useQueue();
 const props = defineProps({
-  queueModal: {
+  shareModal: {
     type: Boolean,
     required: true,
   },
