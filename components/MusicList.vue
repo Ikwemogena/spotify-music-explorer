@@ -40,7 +40,7 @@
                 @click="addToQueue(song)">
                 <Icon name="mdi:plus-box-multiple-outline" class="none text-2xl hover:text-white" />
               </div>
-              <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+              <div class="opacity-0 group-hover:opacity-100 transition-opacity" @click="openShareModal(song.track)">
                 <Icon name="ic:twotone-share" class="none text-2xl hover:text-white" />
               </div>
             </div>
@@ -48,6 +48,9 @@
         </div>
       </div>
     </div>
+
+
+    <MuseSocialModal :shareModal="shareModal"  @close="shareModal = false" :externalUrl="externalUrlProp" />
   </div>
 </template>
 
@@ -58,6 +61,8 @@ import { useQueue } from '@/store/queue';
 import useFormatDuration from '@/composables/useFormatDuration';
 const { formatDuration } = useFormatDuration();
 
+const shareModal = ref(false);
+const externalUrlProp = ref('');
 const queue = ref([]);
 const colorClass = ref('');
 const colors = [
@@ -93,13 +98,10 @@ onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
 });
 
-
-
 const playSong = async (song) => {
   const playerStore = useStore();
   playerStore.setCurrentSong(song);
 };
-
 
 const addToQueue = async (song) => {
   queue.value.push(song.track);
@@ -120,6 +122,13 @@ const addToQueue = async (song) => {
     console.error(error);
   }
 };
+
+function openShareModal(external) {
+  shareModal.value = true;
+  externalUrlProp.value = external; // Set the external URL as a prop
+  console.log('Opening share modal for song in playlist:', externalUrl);
+}
+URL
 </script>
 
 <style lang="scss" scoped></style>
