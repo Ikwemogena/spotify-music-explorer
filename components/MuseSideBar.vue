@@ -7,7 +7,7 @@
         <div class="sm:w-[10rem] flex flex-col gap-2">
           <NuxtLink to="/" class="flex items-center space-x-2 hover:text-white">
 
-            <Icon name="heroicons-solid:home" @click="playSong(song)" class="text-xl cursor-pointer" />
+            <Icon name="heroicons-solid:home" class="text-xl cursor-pointer" />
             <p>Home</p>
           </NuxtLink>
           <NuxtLink to="/search" class="flex items-center space-x-2 hover:text-white">

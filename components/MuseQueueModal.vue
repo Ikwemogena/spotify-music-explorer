@@ -7,14 +7,15 @@
           <h1>Queue</h1>
           <span class="chip-remove close text-xl pointer" @click="closeModal()">&times;</span>
         </div>
-        <div v-if="queue.length > 0">
+        <div v-if="queueArray.length > 0">
           <div class="flex justify-between pb-2">
             <h1>Songs</h1>
-            <p class="cursor-pointer text-red-500">Clear Queue</p>
+            <p class="cursor-pointer text-red-500" @click="emptyQueue">Clear Queue</p>
           </div>
           <ul>
-            <li v-for="(song, index) in queue" :key="index">
-              <p class="pb-1">{{ song }}</p>
+            <li v-for="(song, index) in queueArray" :key="index" class="flex justify-between">
+              <p class="pb-1">{{ song.name }} by {{ song.artists[0].name }}</p>
+              <p class="pb-1" @click="queueArray.splice(index, 1);">Remove</p>
             </li>
           </ul>
 
@@ -22,7 +23,6 @@
 
         <div v-else>
           <h1>No songs in queue yet.</h1>
-
         </div>
       </div>
     </div>
@@ -30,11 +30,11 @@
 </template>
   
 <script setup>
-import { useQueue } from '@/store/queue';
+const {queueArray, clearQueue} = useQueue();
+// const { clearQueue } = useNowPlaying();
 
-const { queue, clearQueue } = useQueue();
 const props = defineProps({
-  shareModal: {
+  queueModal: {
     type: Boolean,
     required: true,
   },
@@ -45,10 +45,7 @@ const playlistDescription = ref('');
 const accessToken = ref('');
 
 onMounted(async () => {
-  console.log('SUp', queue)
-  console.log(queue == false)
   accessToken.value = localStorage.getItem('accessToken') || '';
-  console.log('Saved Items:', accessToken.value);
 });
 
 const emits = defineEmits(['close']);
@@ -58,6 +55,11 @@ function closeModal() {
   playlistTitle.value = '';
   playlistDescription.value = '';
 }
+
+function emptyQueue() {
+  clearQueue();
+}
+
 </script>
   
 <style scoped>

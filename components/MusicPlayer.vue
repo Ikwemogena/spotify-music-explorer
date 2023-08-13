@@ -1,10 +1,10 @@
 <template>
     <div class=" h-24 bg-gradient-to-b from-black to-gray-900 text-white flex justify-between px-6" v-if="currentSong">
       <div class="flex items-center gap-2" >
-          <img class="hidden md:inline h-10 w-10" :src="currentSong?.track?.album?.images[0]?.url" alt="">
+          <img class="hidden md:inline h-10 w-10" :src="currentSong?.album?.images[0]?.url" alt="">
           <div>
-            <h3>{{ currentSong?.track?.name }}</h3>
-            <p>{{ currentSong?.track?.artists[0]?.name }}</p>
+            <h3>{{ currentSong?.name }}</h3>
+            <p>{{ currentSong?.artists[0]?.name }}</p>
           </div>
       </div>
 
@@ -28,24 +28,36 @@
 </template>
   
 <script setup>
-import { useStore } from '@/store/currentSong';
+import { useToast } from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
-const playerStore = useStore(); 
+const { nowPlaying } = useNowPlaying();
 const isPlaying = ref(false);
 const volume = ref(50);
-const currentSong = ref(playerStore.currentSong);
+const currentSong = ref(nowPlaying.value);
 const device = ref(null);
 const accessToken = ref('')
+
+const toast = useToast();
 
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
 });
 
-watch(() => playerStore.currentSong, (newSong) => {
-  currentSong.value = newSong;
+watch(nowPlaying, (newNowPlaying) => {
+  console.log('nowPlaying changed:', newNowPlaying);
+  currentSong.value = newNowPlaying;
   isPlaying.value = true;
-  play()
+  play();
+
+  toast.success(`Now playing ${currentSong.value.name} by ${currentSong.value.artists[0].name}`, {
+      position: 'top-right',
+      timeout: 5000,
+      queue: true,
+      pauseOnHover: false
+    });
 });
+
 
 async function next() {
   if (!accessToken.value) {
@@ -60,6 +72,7 @@ async function next() {
       },
     });
 
+    
     if (!response.ok) {
       throw new Error('Failed to skip to the next track.');
     }
@@ -133,7 +146,7 @@ async function play() {
     }
   
   const deviceId = device.value.id;
-  const trackUri = currentSong.value.track.uri;
+  const trackUri = currentSong.value.uri;
 
   // Play the song on active device
   const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
@@ -145,6 +158,8 @@ async function play() {
       uris: [trackUri],
     }),
   });
+
+  
 
   if (!response.ok) {
     throw new Error('Failed to play song');

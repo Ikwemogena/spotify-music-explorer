@@ -23,18 +23,18 @@
                   class="none text-3xl opacity-0 group-hover:opacity-100 transition-opacity hover:text-white"
                   @click="playSong(song)" />
               </div>
-              <img class="h-10 w-10" :src="song.track.album.images[2].url" alt="">
+              <img class="h-10 w-10" :src="song.track?.album.images[2].url" alt="">
               <div>
-                <NuxtLink :to="`/track/${song.track.id}`" class="flex justify-between gap-4 pr-4">
-                  <p class="w-36 lg:w-64 truncate text-white hover:underline">{{ song.track.name }}</p>
+                <NuxtLink :to="`/track/${song.track?.id}`" class="flex justify-between gap-4 pr-4">
+                  <p class="w-36 lg:w-64 truncate text-white hover:underline">{{ song.track?.name }}</p>
                 </NuxtLink>
-                <p class="w-40">{{ song.track.artists[0].name }}</p>
+                <p class="w-40">{{ song.track?.artists[0].name }}</p>
               </div>
               <div class="flex items-center justify-between ml-auto md:ml-0">
-                <NuxtLink :to="`/album/${song.track.album.id}`" class="flex justify-between gap-4 pr-4">
+                <NuxtLink :to="`/album/${song.track?.album.id}`" class="flex justify-between gap-4 pr-4">
                   <p class="w-40 hidden md:inline hover:underline truncate pr-6">{{ song.track.album.name }}</p>
                 </NuxtLink>
-                <p>{{ formatDuration(song.track.duration_ms) }}</p>
+                <p>{{ formatDuration(song.track?.duration_ms) }}</p>
               </div>
               <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-4 items-center"
                 @click="addToQueue(song)">
@@ -55,15 +55,16 @@
 </template>
 
 <script setup>
+import { useToast } from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
-import { useStore } from '@/store/currentSong';
-import { useQueue } from '@/store/queue';
-import useFormatDuration from '@/composables/useFormatDuration';
+const { setNowPlaying } = useNowPlaying()
 const { formatDuration } = useFormatDuration();
+const {queueArray} = useQueue();
+const toast = useToast();
 
 const shareModal = ref(false);
 const externalUrlProp = ref('');
-const queue = ref([]);
 const colorClass = ref('');
 const colors = [
   "from-indigo-500",
@@ -99,14 +100,18 @@ onMounted(async () => {
 });
 
 const playSong = async (song) => {
-  const playerStore = useStore();
-  playerStore.setCurrentSong(song);
+
+  setNowPlaying(song.track);
+  toast.success(`Now playing ${song.track.name} by ${song.track?.artists[0].name}`, {
+    position: 'top-right',
+    timeout: 5000,
+    queue: true,
+    pauseOnHover: false
+  });
 };
 
 const addToQueue = async (song) => {
-  queue.value.push(song.track);
-  const updateQueue = useQueue();
-  updateQueue.addToQueue(song.track.name);
+  queueArray.value.push(song.track)
   try {
     const response = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${song.track.uri}`, {
       method: 'POST',
@@ -116,8 +121,21 @@ const addToQueue = async (song) => {
     });
 
     if (!response.ok) {
+      toast.info(`Song not added to queue, please ensure you have an active device.`, {
+        position: 'top-right',
+        timeout: 5000,
+        pauseOnHover: false
+      });
       throw new Error('Failed to add the song to the queue.');
     }
+
+    toast.success(`You have added ${song.track.name} by ${song.track?.artists[0].name} to the queue.`, {
+      position: 'top-right',
+      timeout: 5000,
+      queue: true,
+      pauseOnHover: false
+    });
+
   } catch (error) {
     console.error(error);
   }
@@ -125,10 +143,8 @@ const addToQueue = async (song) => {
 
 function openShareModal(external) {
   shareModal.value = true;
-  externalUrlProp.value = external; // Set the external URL as a prop
-  console.log('Opening share modal for song in playlist:', externalUrl);
+  externalUrlProp.value = external;
 }
-URL
 </script>
 
 <style lang="scss" scoped></style>

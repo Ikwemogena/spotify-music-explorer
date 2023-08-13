@@ -5,10 +5,12 @@
       <div class="flex-grow h-screen overflow-y-scroll no-scrollbar">
         <header class="bg-black text-white p-4" v-if="userProfile">
           <div class="flex justify-between items-center">
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
               <Icon @click="toggleSidebar" name="mdi:menu" class="text-3xl" />
-              <button>Back</button>
-              <button>Forward</button>
+              <div>
+                <Icon @click="$router.go(-1)" name="mdi:chevron-left" class="text-2xl" />
+                <Icon @click="$router.go(1)" name="mdi:chevron-right" class="text-2xl" />
+              </div>
             </div>
 
             <div>
@@ -28,22 +30,17 @@
 </template>
 
 <script setup>
-import { useTokenStore } from '@/store/storeAccessToken';
 
 const isSidebarOpen = ref(false);
 const accessToken = ref('');
-const store = useTokenStore();
 const userProfile = ref(null);
 
 function toggleSidebar() {
-  console.log('toggleSidebar')
   isSidebarOpen.value = !isSidebarOpen.value;
 }
 
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
-
-  updateValue(accessToken.value);
   if (!accessToken.value) {
     router.push('/login'); 
     return;
@@ -59,17 +56,14 @@ onMounted(async () => {
     if (!response.ok) {
       throw new Error('Failed to fetch user profile');
     }
-
     const profileData = await response.json();
     userProfile.value = profileData;
+    
   } catch (error) {
     console.error(error);
   }
 });
 
-function updateValue(access_token) {
-  store.setAccessToken(access_token);
-}
 </script>
 
 <style scoped>
