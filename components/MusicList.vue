@@ -55,13 +55,10 @@
 </template>
 
 <script setup>
-import { useToast } from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-sugar.css';
 
 const { setNowPlaying } = useNowPlaying()
 const { formatDuration } = useFormatDuration();
 const {queueArray} = useQueue();
-const toast = useToast();
 
 const shareModal = ref(false);
 const externalUrlProp = ref('');
@@ -102,12 +99,6 @@ onMounted(async () => {
 const playSong = async (song) => {
 
   setNowPlaying(song.track);
-  toast.success(`Now playing ${song.track.name} by ${song.track?.artists[0].name}`, {
-    position: 'top-right',
-    timeout: 5000,
-    queue: true,
-    pauseOnHover: false
-  });
 };
 
 const addToQueue = async (song) => {
@@ -121,20 +112,8 @@ const addToQueue = async (song) => {
     });
 
     if (!response.ok) {
-      toast.info(`Song not added to queue, please ensure you have an active device.`, {
-        position: 'top-right',
-        timeout: 5000,
-        pauseOnHover: false
-      });
       throw new Error('Failed to add the song to the queue.');
     }
-
-    toast.success(`You have added ${song.track.name} by ${song.track?.artists[0].name} to the queue.`, {
-      position: 'top-right',
-      timeout: 5000,
-      queue: true,
-      pauseOnHover: false
-    });
 
   } catch (error) {
     console.error(error);
