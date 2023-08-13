@@ -3,8 +3,8 @@
 </template>
   
 <script setup>
-const { setAccessToken } = useAccessToken()
 
+const { setAccessToken } = useAccessToken()
 import { useToast } from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 
@@ -43,9 +43,7 @@ async function getAccessToken(authorizationCode) {
       pauseOnHover: false
     });
       throw new Error('Failed to exchange authorization code for access token');
-    }
-
-    
+    }    
 
     const tokenData = await response.json();
     const accessToken = tokenData.access_token;
