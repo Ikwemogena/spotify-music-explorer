@@ -28,17 +28,12 @@
 </template>
   
 <script setup>
-import { useToast } from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-sugar.css';
-
 const { nowPlaying } = useNowPlaying();
 const isPlaying = ref(false);
 const volume = ref(50);
 const currentSong = ref(nowPlaying.value);
 const device = ref(null);
 const accessToken = ref('')
-
-const toast = useToast();
 
 onMounted(async () => {
   accessToken.value = localStorage.getItem('accessToken') || '';
@@ -50,12 +45,6 @@ watch(nowPlaying, (newNowPlaying) => {
   isPlaying.value = true;
   play();
 
-  toast.success(`Now playing ${currentSong.value.name} by ${currentSong.value.artists[0].name}`, {
-      position: 'top-right',
-      timeout: 5000,
-      queue: true,
-      pauseOnHover: false
-    });
 });
 
 

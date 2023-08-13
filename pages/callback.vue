@@ -5,10 +5,6 @@
 <script setup>
 
 const { setAccessToken } = useAccessToken()
-import { useToast } from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-sugar.css';
-
-const toast = useToast();
 
 if (process.client) {
   const code = new URLSearchParams(location.search).get('code');
@@ -36,12 +32,6 @@ async function getAccessToken(authorizationCode) {
     });
 
     if (!response.ok) {
-      toast.error(`Unable to authenticate user`, {
-      position: 'top-right',
-      timeout: 5000,
-      queue: true,
-      pauseOnHover: false
-    });
       throw new Error('Failed to exchange authorization code for access token');
     }    
 
