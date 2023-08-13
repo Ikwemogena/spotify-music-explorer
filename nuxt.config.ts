@@ -4,13 +4,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/tailwindcss",
-    "@pinia/nuxt",
     "nuxt-icon",
   ],
   runtimeConfig: {
     public: {
       spotifyClientSecret: process.env.SPOTIFY_CLIENT_SECRET,
       spotifyClientID: process.env.SPOTIFY_CLIENT_ID,
+      redirectUri: process.env.REDIRECT_URI,
     }
-  }
+  },
 })

@@ -3,9 +3,12 @@
 </template>
   
 <script setup>
-import { useTokenStore } from '@/store/storeAccessToken';
+const { setAccessToken } = useAccessToken()
 
-const store = useTokenStore();
+import { useToast } from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+const toast = useToast();
 
 if (process.client) {
   const code = new URLSearchParams(location.search).get('code');
@@ -14,8 +17,7 @@ if (process.client) {
 
 async function getAccessToken(authorizationCode) {
   const tokenEndpoint = 'https://accounts.spotify.com/api/token';
-  const redirectUri = 'https://spotify-music-explorer.vercel.app/callback';
-  const { spotifyClientSecret, spotifyClientID } = useRuntimeConfig().public
+  const { spotifyClientSecret, spotifyClientID, redirectUri } = useRuntimeConfig().public
   const data = {
     grant_type: 'authorization_code',
     code: authorizationCode,
@@ -34,8 +36,16 @@ async function getAccessToken(authorizationCode) {
     });
 
     if (!response.ok) {
+      toast.error(`Unable to authenticate user`, {
+      position: 'top-right',
+      timeout: 5000,
+      queue: true,
+      pauseOnHover: false
+    });
       throw new Error('Failed to exchange authorization code for access token');
     }
+
+    
 
     const tokenData = await response.json();
     const accessToken = tokenData.access_token;
@@ -45,17 +55,15 @@ async function getAccessToken(authorizationCode) {
 
     updateValue(accessToken);
 
-    // Redirect to the home page
     const router = useRouter();
     await router.push('/');
-    window.location.reload();
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-function updateValue(access_token) {
-  store.setAccessToken(access_token);
+function updateValue(access_token) {  
+  setAccessToken(access_token)
 }
 </script>
   

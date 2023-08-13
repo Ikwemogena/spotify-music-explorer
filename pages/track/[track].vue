@@ -34,14 +34,12 @@
 </template>
 
 <script setup>
-import { useStore } from '@/store/currentSong';
-import { useRoute } from 'vue-router';
-
 const accessToken = localStorage.getItem('accessToken') || '';
 const playlistTitle = ref('');
 const playlistImage = ref('');
 const singleTrack = ref([]);
 
+const { formatDuration } = useFormatDuration();
 const { track } = useRoute().params;
 
 onMounted(async () => {
@@ -70,18 +68,6 @@ async function getTrack(token, trackId) {
   }
 }
 
-function formatDuration(durationMs) {
-  const minutes = Math.floor(durationMs / 60000);
-  const seconds = ((durationMs % 60000) / 1000).toFixed(0);
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
-
-function playSong(song) {
-  // Play the song
-  console.log('Playing song:', song.track.name);
-}
 </script>
 
-<style scoped>
-/* Add your custom styles here */
-</style>
+<style scoped></style>

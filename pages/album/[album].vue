@@ -50,23 +50,19 @@
 </template>
 
 <script setup>
-
-import { useStore } from '@/store/currentSong';
-
 const accessToken = localStorage.getItem('accessToken') || '';
 const playlistTitle = ref('');
 const playlistImage = ref('');
 const albumTracks = ref([]);
 const isLoading = ref(true);
 
-// const queue = ref([]);
-
 const { album } = useRoute().params;
+const { formatDuration } = useFormatDuration();
 
 onMounted(async () => {
   try {
     await getAlbum(accessToken, album);
-    isLoading = false;
+    isLoading.value = false;
     } catch (error) {
       console.error(error);
       isLoading.value = false;
@@ -96,31 +92,6 @@ async function getAlbum(token, albumId) {
   }
 }
 
-function formatDuration(durationMs) {
-  const minutes = Math.floor(durationMs / 60000);
-  const seconds = ((durationMs % 60000) / 1000).toFixed(0);
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-}
-
-// const playSong = async (song) => {
-//   // console.log(song.album)
-//   // const { album: { images }, name, artists, uri } = song;
-
-//   // console.log(song)
-  
-//   // Create a new object containing the information
-//   // const songInfo = {
-//   //   image: images[0].url,
-//   //   name,
-//   //   artist: artists[0].name,
-//   //   uri,
-//   // };
-
-//   const playerStore = useStore();
-  
-//   playerStore.setCurrentSong(songInfo);
-// };
-
 const addToQueue = async (song) => {
   try {
     const response = await fetch(`https://api.spotify.com/v1/me/player/queue?uri=${song.uri}`, {
@@ -137,6 +108,10 @@ const addToQueue = async (song) => {
     console.error(error);
   }
 };
+
+function playSong(song) {
+  console.log(song)
+}
 </script>
 
 <style  scoped>

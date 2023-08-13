@@ -48,10 +48,9 @@
 </template>
 
 <script setup>
-import { useStore } from '@/store/currentSong';
-import useFormatDuration from '@/composables/useFormatDuration';
-
 const { formatDuration } = useFormatDuration();
+const { setNowPlaying } = useNowPlaying();
+
 const accessToken = ref('');
 const isLoading = ref(true);
 const recentlyPlayed = ref([]);
@@ -138,9 +137,7 @@ async function getHottestPlaylists(token) {
 }
 
 const playSong = async (song) => {
-  const playerStore = useStore();
-
-  playerStore.setCurrentSong(song);
+  setNowPlaying(song.track);
 };
 </script>
 
